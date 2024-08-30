@@ -70,7 +70,7 @@ const Nav = () => {
                       <button
                         onClick={openConnectModal}
                         type="button"
-                        className="text-white rounded-xl bg-orange-700 hover:bg-orange-600 px-3 py-2 transition duration-300 text-nowrap"
+                        className="text-white rounded-xl bg-orange-700 hover:bg-orange-600 px-4 py-2 transition duration-300 text-nowrap"
                       >
                         Connect Wallet
                       </button>
@@ -82,7 +82,7 @@ const Nav = () => {
                       <button
                         onClick={openChainModal}
                         type="button"
-                        className="bg-[#FB5B0D1F] hover:opacity-90 text-orange-500 hover:text-orange-600 px-3 py-2 rounded-2xl transition duration-300 text-nowrap"
+                        className="bg-[#FB5B0D1F] hover:opacity-90 text-orange-500 hover:text-orange-600 px-4 py-2 rounded-2xl transition duration-300 text-nowrap"
                       >
                         Wrong network
                       </button>
@@ -107,14 +107,14 @@ const Nav = () => {
                             )}
                           </div>
                         )}
-                        <span className="truncate max-w-[55px] sm:max-w-none">
+                        <span className="truncate max-w-[55px] sm:max-w-none text-[12px] font-medium">
                           {chain.name}
                         </span>
                       </button>
                       <button
                         onClick={openAccountModal}
                         type="button"
-                        className="text-white sm:rounded-xl rounded-lg bg-orange-700 hover:bg-orange-600 sm:px-3 px-2 sm:py-2 py-1 transition duration-300 truncate max-w-[70px] sm:max-w-none"
+                        className="text-white sm:rounded-xl rounded-lg bg-orange-700 hover:bg-orange-600 sm:px-3 px-2 sm:py-2 py-1 transition duration-300 truncate max-w-[70px] sm:max-w-none text-[12px] font-medium"
                       >
                         {account.displayName}
                       </button>
@@ -132,8 +132,8 @@ const Nav = () => {
           </button>
         </div>
         {isMenuOpen && (
-          <div className="min-[900px]:hidden absolute top-[90px] right-[30px]">
-            <div className="flex flex-col w-full bg-orange-700 rounded-lg overflow-hidden p-2">
+          <div className="min-[900px]:hidden absolute top-[90px] right-[30px] w-[210px]">
+            <div className="flex flex-col w-full bg-orange-700 rounded-lg overflow-hidden p-2 text-xs">
               <Link
                 href="/"
                 onClick={toggleMenu}
