@@ -162,7 +162,7 @@ const VaultTable = ({ data }) => {
               ) : (
                 filteredData.map((vault, index) => (
                   <tr key={vault.id}>
-                    <Link href="/">
+                    <Link href={`/${vault.id}`}>
                       <div className="rounded-[5px] mb-1 overflow-hidden w-full bg-[#1E212A] hover:bg-[#2b2E37]">
                         <td>
                           <div className="whitespace-nowrap w-[200px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider flex items-center gap-4">
