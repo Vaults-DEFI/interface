@@ -31,9 +31,9 @@ const VaultTable = ({ data }) => {
 
   const filteredData = filteredByTab.filter((vault) => {
     if (activeButton === "all") return true;
-    if (activeButton === "single") return vault.derivatives.length === 1;
-    if (activeButton === "lp") return !vault.pair.includes("BOOP");
-    if (activeButton === "clm") return vault.derivatives.length === 1;
+    if (activeButton === "single") return vault.vault === "single";
+    if (activeButton === "lp") return vault.vault === "lp";
+    if (activeButton === "clm") vault.vault === "clm";
     return true;
   });
 
@@ -70,8 +70,6 @@ const VaultTable = ({ data }) => {
 
       <div className="my-5">
         <button className="flex items-center gap-2 px-7 py-3 border border-orange-600 rounded-2xl">
-          {/* <Image src={arbitrum} alt="arbitrum" width={20} height={20}></Image>
-          Arbitrum */}
           RootStock
         </button>
       </div>
@@ -155,8 +153,21 @@ const VaultTable = ({ data }) => {
             <tbody>
               {filteredData.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-16 text-gray-500">
-                    No data available
+                  <td colSpan="5" className="text-center py-14 text-gray-500">
+                    <p className="w-[70%] m-auto text-xs">
+                      It looks like this category is currently empty.
+                      <br />
+                      In the meantime, explore our CLM category, where you can
+                      find active vaults!
+                      <br />
+                      <button
+                        onClick={() => handleFilterChange("clm")}
+                        className="text-gray-400 text-sm p-2"
+                      >
+                        {" "}
+                        Go to CLM Vaults
+                      </button>
+                    </p>
                   </td>
                 </tr>
               ) : (
@@ -236,6 +247,7 @@ const VaultTable = ({ data }) => {
                                     alt={derivative}
                                     width={16}
                                     height={16}
+                                    className="rounded-full"
                                   />
                                   {derivative}
                                 </span>

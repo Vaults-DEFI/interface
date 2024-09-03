@@ -1,124 +1,26 @@
 [
       {
         "id": "1",
-        "icon1": "/icons/weth.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "WETH-USDC",
+        "icon1": "/icons/wrbtc.svg",
+        "icon2": "/icons/tether.svg",
+        "pair": "WRBTC-rUSDT",
         "apr": "598.65%",
         "tvl": "$468.28K",
         "position": "-",
-        "derivatives": ["STRYKE", "PANCAKESWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/pancakeswap.svg"]
+        "derivatives": ["SUSHISWAP"],
+        "icons": ["/icons/sushiswap.svg"],
+        "vault": "clm"
       },
       {
         "id": "2",
-        "icon1": "/icons/weth.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "WETH-USDC",
+        "icon1": "/icons/rif.svg",
+        "icon2": "/icons/tether.svg",
+        "pair": "RIF-rUSDT",
         "apr": "501.75%",
         "tvl": "$451.70K",
         "position": "-",
-        "derivatives": ["STRYKE", "UNISWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/uniswap.svg"]
-      },
-      {
-        "id": "3",
-        "icon1": "/icons/wbtc.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "WBTC-USDC",
-        "apr": "462.07%",
-        "tvl": "$276.22K",
-        "position": "-",
-        "derivatives": ["STRYKE", "PANCAKESWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/pancakeswap.svg"]
-      },
-      {
-        "id": "4",
-        "icon1": "/icons/wbtc.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "WBTC-USDC",
-        "apr": "310.54%",
-        "tvl": "$194.79K",
-        "position": "-",
-        "derivatives": ["STRYKE", "UNISWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/uniswap.svg"]
-      },
-      {
-        "id": "5",
-        "icon1": "/icons/arbitrum.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "ARB-USDC",
-        "apr": "0.00%",
-        "tvl": "$189.00K",
-        "position": "-",
-        "derivatives": ["STRYKE", "UNISWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/uniswap.svg"]
-      },
-      {
-        "id": "6",
-        "icon1": "/icons/arbitrum.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "ARB-USDC",
-        "apr": "79.76%",
-        "tvl": "$123.05K",
-        "position": "-",
-        "derivatives": ["STRYKE", "PANCAKESWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/pancakeswap.svg"]
-      },
-      {
-        "id": "7",
-        "icon1": "/icons/boop.svg",
-        "icon2": "/icons/weth.svg",
-        "pair": "BOOP-WETH",
-        "apr": "95.56%",
-        "tvl": "$33.51K",
-        "position": "-",
-        "derivatives": ["STRYKE", "UNISWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/uniswap.svg"]
-      },
-      {
-        "id": "8",
-        "icon1": "/icons/usdc.svg",
-        "icon2": "/icons/dai.svg",
-        "pair": "USDC-DAI",
-        "apr": "41.23%",
-        "tvl": "$23.99K",
-        "position": "-",
-        "derivatives": ["CAMELOT"],
-        "icons": ["/icons/camelot.svg"]
-      },
-      {
-        "id": "9",
-        "icon1": "/icons/usdc.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "USDC.e-USDC",
-        "apr": "0.83%",
-        "tvl": "$3.81K",
-        "position": "-",
-        "derivatives": ["CAMELOT"],
-        "icons": ["/icons/camelot.svg"]
-      },
-      {
-        "id": "10",
-        "icon1": "/icons/usdc.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "USDC.e-USDT",
-        "apr": "6.11%",
-        "tvl": "$1.77K",
-        "position": "-",
-        "derivatives": ["CAMELOT"],
-        "icons": ["/icons/camelot.svg"]
-      },
-      {
-        "id": "11",
-        "icon1": "/icons/weth.svg",
-        "icon2": "/icons/usdc.svg",
-        "pair": "WETH-USDC",
-        "apr": "0.00%",
-        "tvl": "$1.98K",
-        "position": "-",
-        "derivatives": ["STRYKE", "UNISWAP"],
-        "icons": ["/icons/stryke.svg", "/icons/uniswap.svg"]
+        "derivatives": ["SUSHISWAP"],
+        "icons": ["/icons/sushiswap.svg"],
+        "vault": "clm"
       }
-
     ]

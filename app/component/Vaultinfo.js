@@ -4,16 +4,16 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Tooltip } from "antd";
 
 const getHeading = (derivatives) => {
-  if (derivatives.includes("STRYKE") && derivatives.includes("PANCAKESWAP")) {
-    return "Stryke Pancake CLAMM +-10% Automator";
-  }
-  if (derivatives.includes("STRYKE") && derivatives.includes("UNISWAP")) {
-    return "Stryke CLAMM Liquidity Manager";
-  }
-  if (derivatives.includes("CAMELOT")) {
-    return "Camelot Stable Vault";
-  }
-  return "Default Vault Heading";
+  // if (derivatives.includes("STRYKE") && derivatives.includes("PANCAKESWAP")) {
+  //   return "Stryke Pancake CLAMM +-10% Automator";
+  // }
+  // if (derivatives.includes("STRYKE") && derivatives.includes("UNISWAP")) {
+  //   return "Stryke CLAMM Liquidity Manager";
+  // }
+  // if (derivatives.includes("CAMELOT")) {
+  //   return "Camelot Stable Vault";
+  // }
+  return "Sushi CLM - WRBTC/rUSDT";
 };
 
 const Vaultinfo = ({ data }) => {
@@ -53,7 +53,7 @@ const Vaultinfo = ({ data }) => {
               color="#111827"
               width="400px"
               overlayInnerStyle={{ width: "280px" }}
-              title="The total APR comprises both the Reward APR and the Fee APR"
+              title="The yearly rate of return on your deposit, excluding compounding effects."
             >
               <AiOutlineInfoCircle />
             </Tooltip>
@@ -68,7 +68,7 @@ const Vaultinfo = ({ data }) => {
               color="#111827"
               width="400px"
               overlayStyle={{ width: "300px" }}
-              title="Reward APR comes from token distributed by protocols as incentives"
+              title="The annual return from trading fees earned in liquidity pools."
             >
               <AiOutlineInfoCircle data-tip="Reward APR description" />
             </Tooltip>
@@ -82,7 +82,7 @@ const Vaultinfo = ({ data }) => {
               placement="bottom"
               color="#111827"
               overlayInnerStyle={{ width: "300px" }}
-              title="Fee APR is based on the fees collected daily from the underlying pool, such as trading fees and option premiums."
+              title="The annual return including all rewards, with the effects of compounding."
             >
               <AiOutlineInfoCircle data-tip="Fee APR description" />
             </Tooltip>
