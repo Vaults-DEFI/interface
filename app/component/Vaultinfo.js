@@ -13,6 +13,7 @@ const getHeading = (derivatives) => {
   // if (derivatives.includes("CAMELOT")) {
   //   return "Camelot Stable Vault";
   // }
+  
   return "Sushi CLM - WRBTC/rUSDT";
 };
 

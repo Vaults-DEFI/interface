@@ -21,6 +21,12 @@ const Overview = ({ data }) => {
       "The liquidity provided through this vault is utilized for AMM to generate swap fee revenue, with the range managed by an automated strategy bot.";
   }
 
+  else {
+    strategyText = "";
+    strategyDescription =
+      "This vault allows users to provide liquidity to a selected pair in any SushiSwap DEX, automatically managing their liquidity within an optimized range to maximize returns. The strategy includes a liquidity manager that efficiently adjusts positions, creating both alternative single-sided positions and balanced 50/50 positions as needed, all managed seamlessly by the contract. Periodically, the vault calls a harvest function to claim accrued fees and redeposit them, compounding the user's earnings. Users benefit from a straightforward, efficient strategy without the burden of platform fees.";
+  }
+
   return (
     <div className="py-3 pr-3">
       <h2 className="text-3xl font-bold my-3">{strategyText}</h2>
@@ -68,8 +74,6 @@ const Overview = ({ data }) => {
         </div>
         <div className="flex flex-col sm:flex-row gap-2 justify-between sm:items-center bg-[#1E212A] rounded-b-xl px-5 py-6 text-xs sm:text-base">
           <span>Source of revenue</span>
-          <div>
-            {data.derivatives.length === 2 ? (
               <div className="flex items-center gap-1">
                 <span className="flex items-center gap-1">
                   <MdOutlineSwapHorizontalCircle />
@@ -77,23 +81,13 @@ const Overview = ({ data }) => {
                 </span>
                 <span className="flex items-center gap-1">
                   <MdOutlineWorkspacePremium />
-                  OPTION PREMIUM
+                  REWARDS
                 </span>
-              </div>
-            ) : (
-              <span className="flex items-center gap-1">
-                <MdOutlineSwapHorizontalCircle />
-                SWAP FEE
-              </span>
-            )}
           </div>
         </div>
       </div>
 
-      {data.derivatives.length === 2 && 
       <StrategyComparisonDiagram />
-      }
-
 
       <LiquidityManagementDashboard data = {data} />
     </div>
