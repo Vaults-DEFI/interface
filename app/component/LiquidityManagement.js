@@ -30,7 +30,7 @@ const LiquidityManagementDashboard = ({ data }) => {
             <h2 className="text-xl my-4 sm:min-h-16">
               Liquidity Rebalancing and Management
             </h2>
-            <p className="mb-4 text-[15px] my-4 sm:min-h-[12rem] lg:min-h-64 text-justify">
+            <p className="mb-4 text-[15px] my-4 sm:min-h-[12rem] lg:min-h-[14rem] text-justify">
               Our vault includes an automated feature that ensures your
               liquidity is always positioned within the most profitable range.
               By moving ticks, the smart contract adjusts your position in
