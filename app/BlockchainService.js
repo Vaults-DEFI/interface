@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
 import ERC20Abi from "./IERC20.json";
 
-const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC"
+const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC";
 
 export async function connectWallet() {
   if (typeof ethers === "undefined") {
@@ -24,7 +24,6 @@ export async function connectWallet() {
     console.log("Ethereum provider not found. Please install MetaMask.");
   }
 }
-
 
 export async function getContract() {
   const signer = await connectWallet();
@@ -133,12 +132,18 @@ export async function finaldeposit(
     );
     console.log("Checksum address:", checksumrUSDT);
 
-    const rUSDTContract = new ethers.Contract(checksumrUSDT, ERC20Abi.abi, signer)
-    console.log("...", rUSDTContract)
-    const approverUSDT = await rUSDTContract.approve(contractAddress, amount1BN);
-    await approverUSDT.wait()
-    console.log("Approved rUSDT")
-
+    const rUSDTContract = new ethers.Contract(
+      checksumrUSDT,
+      ERC20Abi.abi,
+      signer
+    );
+    console.log("...", rUSDTContract);
+    const approverUSDT = await rUSDTContract.approve(
+      contractAddress,
+      amount1BN
+    );
+    await approverUSDT.wait();
+    console.log("Approved rUSDT");
 
     const tx = await contract.deposit(amount0BN, amount1BN, shares);
     await tx.wait();
@@ -156,13 +161,12 @@ export async function finaldeposit(
   }
 }
 
-
 export async function Withdraw(address, withdrawAmount) {
   try {
     const contract = await getContract();
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
-      withdrawAmount
+      withdrawAmount,
     ]);
 
     const result = await contract.provider.call({
@@ -181,9 +185,13 @@ export async function Withdraw(address, withdrawAmount) {
     };
     console.log("Parsed Deposit Result:", parsedResult);
 
-    const tx = await contract.withdraw(withdrawAmount, parsedResult.amount0, parsedResult.amount1)
-    await tx.wait()
-    console.log("withdraw done")
+    const tx = await contract.withdraw(
+      withdrawAmount,
+      parsedResult.amount0,
+      parsedResult.amount1
+    );
+    await tx.wait();
+    console.log("withdraw done");
   } catch (error) {
     console.error("Preview withdraw error:", error);
     if (error.error && error.error.message) {
@@ -193,15 +201,11 @@ export async function Withdraw(address, withdrawAmount) {
   }
 }
 
-
 // tokenbalance
 
 export async function getTokenBalance(address, item_address) {
-
   try {
-    let checksumRBTC = ethers.utils.getAddress(
-      item_address
-    );
+    let checksumRBTC = ethers.utils.getAddress(item_address);
     const signer = await connectWallet();
     const RBTCContract = new ethers.Contract(
       checksumRBTC,
@@ -210,8 +214,13 @@ export async function getTokenBalance(address, item_address) {
     );
     const balance = await RBTCContract.balanceOf(address);
     console.log("balance", balance);
-    return Number(balance) / 10 ** 18
+    return Number(balance) / 10 ** 18;
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function position(address) {
+  const userShares = await contract.balanceOf(userAddress);
+  return userShares;
 }

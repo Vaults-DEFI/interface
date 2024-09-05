@@ -5,7 +5,8 @@ import {
   finaldeposit,
   Withdraw,
   parseDeposit,
-  previewWithdraw, getToken1Balance
+  previewWithdraw, getToken1Balance,
+  getTokenBalance
 } from "../BlockchainService";
 import { useAccount } from "wagmi";
 
@@ -39,6 +40,10 @@ const Position = ({ data }) => {
     };
     fetchBalances();
   }, [address, data.item1_Address, data.item2_Address]);
+
+  useEffect(() => {
+
+  })
 
   const handleMaxitem1 = (balance1) => {
     setAmount1(balance1);
