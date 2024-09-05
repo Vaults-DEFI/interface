@@ -23,7 +23,7 @@ export async function connectWallet() {
   }
 }
 
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC";
 
 export async function getContract() {
   const signer = await connectWallet();
@@ -94,36 +94,30 @@ export async function finaldeposit(amount0, amount1, shares) {
 
     const signer = await connectWallet();
 
-    // // approve RBTC------
-    // let checksumRBTC = ethers.utils.getAddress("0x542fda317318ebf1d3deaf76e0b632741a7e677d")
-    // console.log("Checksum address:", checksumRBTC)
+    // approve RBTC------
+    let checksumRBTC = ethers.utils.getAddress("0x542fda317318ebf1d3deaf76e0b632741a7e677d")
+    console.log("Checksum address:", checksumRBTC)
 
-    // const RBTCContract = new ethers.Contract(checksumRBTC, ERC20Abi.abi, signer)
-    // console.log("...", RBTCContract)
-    // const approveRBTC = await RBTCContract.approve(contractAddress, amount0BN);
-    // approveRBTC.wait()
-    // console.log("Approved RBTC")
+    const RBTCContract = new ethers.Contract(checksumRBTC, ERC20Abi.abi, signer)
+    console.log("...", RBTCContract)
+    const approveRBTC = await RBTCContract.approve(contractAddress, amount0BN);
+    await approveRBTC.wait()
+    console.log("Approved RBTC")
 
-    // // approve rUSDT------
-    // let checksumrUSDT = ethers.utils.getAddress("0xef213441a85df4d7acbdae0cf78004e1e486bb96")
-    // console.log("Checksum address:", checksumrUSDT)
+    // approve rUSDT------
+    let checksumrUSDT = ethers.utils.getAddress("0xef213441a85df4d7acbdae0cf78004e1e486bb96")
+    console.log("Checksum address:", checksumrUSDT)
 
-    // const rUSDTContract = new ethers.Contract(checksumrUSDT, ERC20Abi.abi, signer)
-    // console.log("...", rUSDTContract)
-    // const approverUSDT = await rUSDTContract.approve(contractAddress, amount0BN);
-    // approverUSDT.wait()
-    // console.log("Approved rUSDT")
+    const rUSDTContract = new ethers.Contract(checksumrUSDT, ERC20Abi.abi, signer)
+    console.log("...", rUSDTContract)
+    const approverUSDT = await rUSDTContract.approve(contractAddress, amount1BN);
+    await approverUSDT.wait()
+    console.log("Approved rUSDT")
 
-    // Set a custom gas limit
-    // const gasLimit = ethers.utils.hexlify(5000000); // Example value, adjust based on requirements
-
-    const tx = await contract.deposit(amount0BN, amount1BN, shares,
-      {
-        gasLimit: 500000
-      }); // Call the deposit function with gas limit
-
-    await tx.wait(); // Wait for the transaction to be mined
+    const tx = await contract.deposit(amount0BN, amount1BN, shares);
+    await tx.wait();
     console.log("Deposit successful");
+
   } catch (error) {
     console.error("Deposit error:", error);
     if (error.data && error.data.message) {
