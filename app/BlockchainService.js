@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
 import ERC20Abi from "./IERC20.json";
 
-const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC";
+const contractAddress = "0x8438Ad1C834623CfF278AB6829a248E37C2D7E3f";
 
 export async function connectWallet() {
   if (typeof ethers === "undefined") {
@@ -112,7 +112,7 @@ export async function finaldeposit(
 
     // approve RBTC------
     let checksumRBTC = ethers.utils.getAddress(
-      "0x542fda317318ebf1d3deaf76e0b632741a7e677d"
+      item1_address
     );
     console.log("Checksum address:", checksumRBTC);
 
@@ -128,7 +128,7 @@ export async function finaldeposit(
 
     // approve rUSDT------
     let checksumrUSDT = ethers.utils.getAddress(
-      "0xef213441a85df4d7acbdae0cf78004e1e486bb96"
+      item2_address
     );
     console.log("Checksum address:", checksumrUSDT);
 
@@ -207,11 +207,13 @@ export async function getTokenBalance(address, item_address) {
   try {
     let checksumRBTC = ethers.utils.getAddress(item_address);
     const signer = await connectWallet();
+    console.log("signer from balance", signer)
     const RBTCContract = new ethers.Contract(
       checksumRBTC,
       ERC20Abi.abi,
       signer
     );
+    console.log("just check----", address, item_address)
     const balance = await RBTCContract.balanceOf(address);
     console.log("balance", balance);
     return Number(balance) / 10 ** 18;
