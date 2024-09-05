@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Tooltip } from "antd";
 import {
   finaldeposit,
   finalwithdraw,
+  getTokenBalance,
   parseDeposit,
   previewWithdraw,
 } from "../BlockchainService";
+import { useAccount } from "wagmi";
 
 const Position = ({ data }) => {
+  const { address, isConnected } = useAccount();
+
   const [activeTab, setActiveTab] = useState("deposit");
 
   const [amount1, setAmount1] = useState("");
@@ -18,7 +22,34 @@ const Position = ({ data }) => {
 
   const [withdrawAmount, setWithdrawAmount] = useState("");
 
-  const handleDeposit = async () => {
+  const [balance1, setBalance1] = useState(null);
+  const [balance2, setBalance2] = useState(null);
+
+  useEffect(() => {
+    const fetchBalances = async () => {
+      const token1Balance = await getTokenBalance(address, data.item1_Address);
+      const token2Balance = await getTokenBalance(address, data.item2_Address);
+
+      console.log("token1...", token1Balance);
+      console.log(token2Balance);
+
+      setBalance1(token1Balance);
+      setBalance2(token2Balance);
+    };
+    fetchBalances();
+  }, [address, data.item1_Address, data.item2_Address]);
+
+  const handleMaxitem1 = (balance1) => {
+    setAmount1(balance1);
+  };
+
+  const handleMaxitem2 = (balance2) => {
+    setAmount2(balance2);
+  };
+
+  const handleDeposit = async (item1_address, item2_address) => {
+    console.log("item addressss", item1_address);
+    console.log("item addressss", item2_address);
     try {
       // Call parseDeposit to get the result
       const result = await parseDeposit(amount1, amount2);
@@ -34,7 +65,14 @@ const Position = ({ data }) => {
       console.log("shares", result.shares);
 
       // Call finaldeposit with amount1, amount2, and shares
-      await finaldeposit(amount1, amount2, result.shares);
+      console.log("..................", item1_address);
+      await finaldeposit(
+        amount1,
+        amount2,
+        result.shares,
+        item1_address,
+        item2_address
+      );
     } catch (error) {
       console.error("Deposit error:", error);
     }
@@ -94,8 +132,8 @@ const Position = ({ data }) => {
         <div className="bg-[#1E212A] text-gray-400 rounded-t rounded-b-xl px-5 py-5 mt-[0.4px]">
           <div className="flex flex-col">
             <div className="flex justify-between items-center text-sm mb-2">
-              <span>Amount</span>
-              <span>Balance: 0.000</span>
+              {/* <span>Amount</span> */}
+              <span>Balance: {balance1}</span>
             </div>
             <div
               className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
@@ -108,9 +146,16 @@ const Position = ({ data }) => {
                 value={amount1}
                 onChange={(e) => setAmount1(e.target.value)}
               />
-              <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
+              <button
+                onClick={() => handleMaxitem1(balance1)}
+                className="bg-[#3A4050] px-3 py-[6px] rounded-lg"
+              >
                 MAX
               </button>
+            </div>
+            <div className="flex justify-between items-center text-sm mb-2">
+              {/* <span>Amount</span> */}
+              <span>Balance: {balance2}</span>
             </div>
             <div
               className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
@@ -123,17 +168,23 @@ const Position = ({ data }) => {
                 value={amount2}
                 onChange={(e) => setAmount2(e.target.value)}
               />
-              <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
+              <button
+                onClick={() => handleMaxitem2(balance2)}
+                className="bg-[#3A4050] px-3 py-[6px] rounded-lg"
+              >
                 MAX
               </button>
             </div>
           </div>
           <button
-            onClick={handleDeposit}
+            onClick={() =>
+              handleDeposit(data.item1_Address, data.item2_Address)
+            }
             className="w-full btn-text-white rounded-xl bg-orange-700 hover:bg-orange-600 p-3 transition duration-300 text-nowrap"
           >
             Deposit
           </button>
+
           <div className="mt-7 text-sm flex flex-col gap-2">
             <div className="flex justify-between">
               <span className="flex items-center gap-2">

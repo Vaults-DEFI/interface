@@ -31,14 +31,14 @@ export async function getContract() {
     contractAddress,
     contractAbi.abi,
     signer
-  ); 
+  );
   return contract;
 }
 
 export async function parseDeposit(amount0, amount1) {
   try {
     // Get the contract instance
-    const contract = await getContract(); 
+    const contract = await getContract();
     console.log("Contract address:", contract.address);
 
     // Convert input amounts to BigNumber
@@ -87,13 +87,21 @@ export async function parseDeposit(amount0, amount1) {
       console.error("Detailed error message:", error.error.message);
     }
     // Re-throw the error for further handling
-    throw error; 
+    throw error;
   }
 }
 
-export async function finaldeposit(amount0, amount1, shares) {
+export async function finaldeposit(
+  amount0,
+  amount1,
+  shares,
+  item1_address,
+  item2_address
+) {
   try {
     const contract = await getContract(); // Get the contract instance with signer
+    console.log("item addressss", item1_address);
+    console.log("item addressss", item2_address);
 
     // Convert input amounts to BigNumber
     const amount0BN = ethers.utils.parseUnits(amount0, 18);
@@ -102,36 +110,49 @@ export async function finaldeposit(amount0, amount1, shares) {
     const signer = await connectWallet();
 
     // approve RBTC------
-    let checksumRBTC = ethers.utils.getAddress("0x542fda317318ebf1d3deaf76e0b632741a7e677d")
-    console.log("Checksum address:", checksumRBTC)
+    let checksumRBTC = ethers.utils.getAddress(
+      "0x542fda317318ebf1d3deaf76e0b632741a7e677d"
+    );
+    console.log("Checksum address:", checksumRBTC);
 
-    const RBTCContract = new ethers.Contract(checksumRBTC, ERC20Abi.abi, signer)
-    console.log("...", RBTCContract)
+    const RBTCContract = new ethers.Contract(
+      checksumRBTC,
+      ERC20Abi.abi,
+      signer
+    );
+    console.log("...", RBTCContract);
     const approveRBTC = await RBTCContract.approve(contractAddress, amount0BN);
-    await approveRBTC.wait()
-    console.log("Approved RBTC")
+    await approveRBTC.wait();
+    console.log("Approved RBTC");
 
     // approve rUSDT------
-    let checksumrUSDT = ethers.utils.getAddress("0xef213441a85df4d7acbdae0cf78004e1e486bb96")
-    console.log("Checksum address:", checksumrUSDT)
+    let checksumrUSDT = ethers.utils.getAddress(
+      "0xef213441a85df4d7acbdae0cf78004e1e486bb96"
+    );
+    console.log("Checksum address:", checksumrUSDT);
 
-    const rUSDTContract = new ethers.Contract(checksumrUSDT, ERC20Abi.abi, signer)
-    console.log("...", rUSDTContract)
-    const approverUSDT = await rUSDTContract.approve(contractAddress, amount1BN);
-    await approverUSDT.wait()
-    console.log("Approved rUSDT")
+    const rUSDTContract = new ethers.Contract(
+      checksumrUSDT,
+      ERC20Abi.abi,
+      signer
+    );
+    console.log("...", rUSDTContract);
+    const approverUSDT = await rUSDTContract.approve(
+      contractAddress,
+      amount1BN
+    );
+    await approverUSDT.wait();
+    console.log("Approved rUSDT");
 
     // Set a custom gas limit
     // const gasLimit = ethers.utils.hexlify(5000000); // Example value, adjust based on requirements
 
-    const tx = await contract.deposit(amount0BN, amount1BN, shares,
-      {
-        gasLimit: 500000
-      }); // Call the deposit function with gas limit
+    const tx = await contract.deposit(amount0BN, amount1BN, shares, {
+      gasLimit: 500000,
+    }); // Call the deposit function with gas limit
 
     await tx.wait(); // Wait for the transaction to be mined
     console.log("Deposit successful");
-
   } catch (error) {
     console.error("Deposit error:", error);
     if (error.data && error.data.message) {
@@ -145,7 +166,6 @@ export async function finaldeposit(amount0, amount1, shares) {
   }
 }
 
-
 export async function previewWithdraw(shares) {
   try {
     const contract = await getContract();
@@ -154,7 +174,7 @@ export async function previewWithdraw(shares) {
     console.log("shares.....", sharesBN.toString());
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
-      sharesBN
+      sharesBN,
     ]);
 
     const result = await contract.provider.call({
@@ -173,16 +193,16 @@ export async function previewWithdraw(shares) {
     const parsedResult = {
       amount0: decodedResult.amount0.toString(),
       amount1: decodedResult.amount1.toString(),
-    }
+    };
     console.log("Parsed Deposit Result:", parsedResult);
     return parsedResult;
-
   } catch (error) {
     console.error("Preview withdraw error:", error);
     if (error.error && error.error.message) {
       console.error("Detailed error message:", error.error.message);
     }
-    throw error;   }
+    throw error;
+  }
 }
 
 // export async function finalwithdraw(shares, minAmount0, minAmount1) {
@@ -193,7 +213,6 @@ export async function previewWithdraw(shares) {
 //     const minAmount1BN = ethers.utils.parseUnits(minAmount1, 18);
 
 //     const signer = await connectWallet();
-
 
 //     const tx = await contract.withdraw(sharesBN, minAmount0BN, minAmount1BN, {
 //       gasLimit: 500000,
@@ -216,5 +235,25 @@ export async function previewWithdraw(shares) {
 //   }
 // }
 
+// tokenbalance
 
+export async function getTokenBalance(address, item_address) {
 
+  try {
+    let checksumRBTC = ethers.utils.getAddress(
+      // "0x542fda317318ebf1d3deaf76e0b632741a7e677d"
+      item_address
+    );
+    const signer = await connectWallet();
+    const RBTCContract = new ethers.Contract(
+      checksumRBTC,
+      ERC20Abi.abi,
+      signer
+    );
+    const balance = await RBTCContract.balanceOf(address);
+    console.log("balance", balance);
+    return Number(balance)/10**18
+  } catch (error) {
+    console.log(error);
+  }
+}
