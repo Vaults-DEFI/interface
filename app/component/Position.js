@@ -5,15 +5,22 @@ import {
   finaldeposit,
   Withdraw,
   parseDeposit,
-  previewWithdraw, getToken1Balance,
-  getTokenBalance
+  getTokenBalance,
+  getContract,
 } from "../BlockchainService";
 import { useAccount } from "wagmi";
 
-
+export async function position(address) {
+  const contract = await getContract();
+  if (!contract || !address) {
+    throw new Error("Contract or address is not available");
+  }
+  const userShares = await contract.balanceOf(address);
+  return ethers.utils.formatUnits(userShares, 18);
+}
 
 const Position = ({ data }) => {
-  const { address, isConnected } = useAccount()
+  const { address, isConnected } = useAccount();
 
   const [activeTab, setActiveTab] = useState("deposit");
 
@@ -26,6 +33,26 @@ const Position = ({ data }) => {
 
   const [balance1, setBalance1] = useState(null);
   const [balance2, setBalance2] = useState(null);
+
+  const [userPosition, setUserPosition] = useState(null);
+
+  useEffect(() => {
+    const fetchPosition = async () => {
+      if (address) {
+        try {
+          const userposition = await position(address);
+          console.log("Position:", userposition);
+          setUserPosition(userposition);
+        } catch (error) {
+          console.error("Error fetching position:", error);
+        }
+      } else {
+        console.error("Address is undefined");
+      }
+    };
+
+    fetchPosition();
+  }, [address]); // Only re-run when `address` changes
 
   useEffect(() => {
     const fetchBalances = async () => {
@@ -42,8 +69,13 @@ const Position = ({ data }) => {
   }, [address, data.item1_Address, data.item2_Address]);
 
   useEffect(() => {
+    const fetchPosition = async () => {
+      const userposition = await position(address);
 
-  })
+      console.log("positionnnnnn", userposition);
+    };
+    fetchPosition();
+  });
 
   const handleMaxitem1 = (balance1) => {
     setAmount1(balance1);
@@ -94,23 +126,24 @@ const Position = ({ data }) => {
       <div className="text-nowrap bg-[#1E212A] flex justify-between items-center rounded-t-xl rounded-b px-5 py-5">
         <span>Your position</span>
         <p className="flex gap-2 items-center text-xs">
-          <span className="">$0.00</span>
-          <span className="sm:text-sm text-gray-400">0.0000 USDC</span>
+          <span className="sm:text-sm text-gray-400">{userPosition} shares</span>
         </p>
       </div>
 
       <div className="flex items-center justify-between">
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
-            }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
+            activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
+          }`}
           onClick={() => setActiveTab("deposit")}
         >
           Deposit
         </button>
 
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
-            }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
+            activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
+          }`}
           onClick={() => setActiveTab("withdraw")}
         >
           Withdraw
@@ -120,13 +153,14 @@ const Position = ({ data }) => {
       {activeTab === "deposit" && (
         <div className="bg-[#1E212A] text-gray-400 rounded-t rounded-b-xl px-5 py-5 mt-[0.4px]">
           <div className="flex flex-col">
-            <div className="flex justify-between items-center text-sm mb-2">
+            <div className="flex justify-end items-center text-sm mb-2">
               {/* <span>Amount</span> */}
               <span>Balance: {balance1}</span>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount1 ? "border-orange-500" : ""
-                }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                amount1 ? "border-orange-500" : ""
+              }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item1}</p>
               <input
@@ -141,13 +175,14 @@ const Position = ({ data }) => {
                 MAX
               </button>
             </div>
-            <div className="flex justify-between items-center text-sm mb-2">
+            <div className="flex justify-end items-center text-sm mb-2">
               {/* <span>Amount</span> */}
               <span>Balance: {balance2}</span>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount2 ? "border-orange-500" : ""
-                }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                amount2 ? "border-orange-500" : ""
+              }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item2}</p>
               <input
@@ -226,8 +261,9 @@ const Position = ({ data }) => {
                 <span>Balance: {withdrawAmount}</span>
               </div>
               <div
-                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${withdrawAmount ? "border-orange-500" : ""
-                  } focus-within:border-orange-500`}
+                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                  withdrawAmount ? "border-orange-500" : ""
+                } focus-within:border-orange-500`}
               >
                 <p className="mx-2">Shares</p>
                 <input

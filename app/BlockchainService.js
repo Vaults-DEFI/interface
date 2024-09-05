@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
 import ERC20Abi from "./IERC20.json";
 
-const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC";
+const contractAddress = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6";
 
 export async function connectWallet() {
   if (typeof ethers === "undefined") {
@@ -214,13 +214,16 @@ export async function getTokenBalance(address, item_address) {
     );
     const balance = await RBTCContract.balanceOf(address);
     console.log("balance", balance);
-    return Number(balance) / 10 ** 18;
+    return ethers.utils.formatUnits(balance, 18);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function position(address) {
-  const userShares = await contract.balanceOf(userAddress);
-  return userShares;
-}
+// export async function position(address) {
+//   console.log("addressssssssssss", address);
+
+//   const contract = await getContract();
+//   const userShares = await contract.balanceOf(address);
+//   return userShares;
+// }
