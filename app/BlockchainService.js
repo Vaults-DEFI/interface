@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
+import ERC20Abi from "./IERC20.json"
 
 export async function connectWallet() {
   if (typeof ethers === "undefined") {
@@ -22,124 +23,10 @@ export async function connectWallet() {
   }
 }
 
-const contractAddress = "0x34A1D3fff3958843C43aD80F30b94c510645C316";
-// const contractABI = [
-//   {
-//     type: "function",
-//     name: "previewDeposit",
-//     inputs: [
-//       {
-//         name: "_amount0",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//       {
-//         name: "_amount1",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//     ],
-//     outputs: [
-//       {
-//         name: "shares",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//       {
-//         name: "amount0",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//       {
-//         name: "amount1",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//       {
-//         name: "fee0",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//       {
-//         name: "fee1",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//     ],
-//     stateMutability: "view",
-//   },
-//   {
-//     type: "function",
-//     name: "deposit",
-//     inputs: [
-//       {
-//         name: "_amount0",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//       {
-//         name: "_amount1",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//       {
-//         name: "_minShares",
-//         type: "uint256",
-//         internalType: "uint256",
-//       },
-//     ],
-//     outputs: [],
-//     stateMutability: "nonpayable",
-//   },
-//   //   {
-//   //     type: "event",
-//   //     name: "Deposit",
-//   //     inputs: [
-//   //         {
-//   //             name: "user",
-//   //             type: "address",
-//   //             indexed: true,
-//   //             internalType: "address"
-//   //         },
-//   //         {
-//   //             name: "shares",
-//   //             type: "uint256",
-//   //             indexed: false,
-//   //             internalType: "uint256"
-//   //         },
-//   //         {
-//   //             name: "amount0",
-//   //             type: "uint256",
-//   //             indexed: false,
-//   //             internalType: "uint256"
-//   //         },
-//   //         {
-//   //             name: "amount1",
-//   //             type: "uint256",
-//   //             indexed: false,
-//   //             internalType: "uint256"
-//   //         },
-//   //         {
-//   //             name: "fee0",
-//   //             type: "uint256",
-//   //             indexed: false,
-//   //             internalType: "uint256"
-//   //         },
-//   //         {
-//   //             name: "fee1",
-//   //             type: "uint256",
-//   //             indexed: false,
-//   //             internalType: "uint256"
-//   //         }
-//   //     ],
-//   //     "anonymous": false
-//   // },
-// ];
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 export async function getContract() {
   const signer = await connectWallet();
-  console.log("signerrrrrrrrr", signer);
-  console.log("abi...", contractAbi.abi);
   const contract = new ethers.Contract(
     contractAddress,
     contractAbi.abi,
@@ -147,31 +34,6 @@ export async function getContract() {
   ); // Use the signer to create the contract instance
   return contract;
 }
-
-// export async function parseDeposit(amount0, amount1) {
-//   try {
-//     const contract = await getContract(); // Get the contract instance
-//     console.log(contract);
-//     console.log("amount 0", amount0);
-//     console.log("amount 1", amount1);
-//     const amount0BN = ethers.utils.parseUnits(amount0, 18);
-//     const amount1BN = ethers.utils.parseUnits(amount1, 18);
-//     // const result = await contract.strategy();
-//     // const result = await contract.previewDeposit(amount0BN, amount1BN); // Call the smart contract function
-//     const data = contract.interface.encodeFunctionData("previewDeposit", [
-//       amount0BN,
-//       amount1BN,
-//     ]);
-//     const result = await contract.provider.call({
-//       to: contract.address,
-//       data: data,
-//     });
-//     console.log("Parsed Deposit Result:", result); // Log the result for debugging
-//     return result; // Return the result`
-//   } catch (error) {
-//     console.error("Error parsing deposit:", error);
-//   }
-// }
 
 
 export async function parseDeposit(amount0, amount1) {
@@ -225,10 +87,54 @@ export async function parseDeposit(amount0, amount1) {
 export async function finaldeposit(amount0, amount1, shares) {
   try {
     const contract = await getContract(); // Get the contract instance with signer
-    const tx = await contract.deposit(amount0, amount1, shares); // Call the deposit function
+
+    // Convert input amounts to BigNumber
+    const amount0BN = ethers.utils.parseUnits(amount0, 18);
+    const amount1BN = ethers.utils.parseUnits(amount1, 18);
+
+    const signer = await connectWallet();
+
+    // // approve RBTC------
+    // let checksumRBTC = ethers.utils.getAddress("0x542fda317318ebf1d3deaf76e0b632741a7e677d")
+    // console.log("Checksum address:", checksumRBTC)
+
+    // const RBTCContract = new ethers.Contract(checksumRBTC, ERC20Abi.abi, signer)
+    // console.log("...", RBTCContract)
+    // const approveRBTC = await RBTCContract.approve(contractAddress, amount0BN);
+    // approveRBTC.wait()
+    // console.log("Approved RBTC")
+
+    // // approve rUSDT------
+    // let checksumrUSDT = ethers.utils.getAddress("0xef213441a85df4d7acbdae0cf78004e1e486bb96")
+    // console.log("Checksum address:", checksumrUSDT)
+
+    // const rUSDTContract = new ethers.Contract(checksumrUSDT, ERC20Abi.abi, signer)
+    // console.log("...", rUSDTContract)
+    // const approverUSDT = await rUSDTContract.approve(contractAddress, amount0BN);
+    // approverUSDT.wait()
+    // console.log("Approved rUSDT")
+
+    // Set a custom gas limit
+    // const gasLimit = ethers.utils.hexlify(5000000); // Example value, adjust based on requirements
+
+    const tx = await contract.deposit(amount0BN, amount1BN, shares,
+      {
+        gasLimit: 500000
+      }); // Call the deposit function with gas limit
+
     await tx.wait(); // Wait for the transaction to be mined
     console.log("Deposit successful");
   } catch (error) {
     console.error("Deposit error:", error);
+    if (error.data && error.data.message) {
+      console.error("Detailed error message:", error.data.message);
+    } else if (error.message) {
+      console.error("Error message:", error.message);
+    }
+    if (error.transaction) {
+      console.error("Transaction details:", error.transaction);
+    }
+
   }
 }
+
