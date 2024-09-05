@@ -33,14 +33,13 @@ export async function getContract() {
     contractAbi.abi,
     signer
   );
-  );
+
   return contract;
 }
 
 export async function parseDeposit(amount0, amount1) {
   try {
     // Get the contract instance
-    const contract = await getContract();
     const contract = await getContract();
     console.log("Contract address:", contract.address);
 
@@ -161,9 +160,6 @@ export async function finaldeposit(
 export async function Withdraw(address, withdrawAmount) {
   try {
     const contract = await getContract();
-    // console.log("user address", address);
-    // const userShares = await contract.balanceOf("0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
-    // console.log(Number(userShares))
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
       withdrawAmount
@@ -197,39 +193,6 @@ export async function Withdraw(address, withdrawAmount) {
   }
 }
 
-    throw error;
-  }
-}
-
-// export async function finalwithdraw(shares, minAmount0, minAmount1) {
-//   try {
-//     const contract = await getContract();
-//     const sharesBN = ethers.utils.parseUnits(shares, 18);
-//     const minAmount0BN = ethers.utils.parseUnits(minAmount0, 18);
-//     const minAmount1BN = ethers.utils.parseUnits(minAmount1, 18);
-
-//     const signer = await connectWallet();
-
-//     const tx = await contract.withdraw(sharesBN, minAmount0BN, minAmount1BN, {
-//       gasLimit: 500000,
-//     });
-
-//     await tx.wait();
-//     console.log("Withdrawal successful");
-//     return true;
-//   } catch (error) {
-//     console.error("Withdrawal error:", error);
-//     if (error.data && error.data.message) {
-//       console.error("Detailed error message:", error.data.message);
-//     } else if (error.message) {
-//       console.error("Error message:", error.message);
-//     }
-//     if (error.transaction) {
-//       console.error("Transaction details:", error.transaction);
-//     }
-//     return false;
-//   }
-// }
 
 // tokenbalance
 
@@ -237,7 +200,6 @@ export async function getTokenBalance(address, item_address) {
 
   try {
     let checksumRBTC = ethers.utils.getAddress(
-      // "0x542fda317318ebf1d3deaf76e0b632741a7e677d"
       item_address
     );
     const signer = await connectWallet();
@@ -248,7 +210,7 @@ export async function getTokenBalance(address, item_address) {
     );
     const balance = await RBTCContract.balanceOf(address);
     console.log("balance", balance);
-    return Number(balance)/10**18
+    return Number(balance) / 10 ** 18
   } catch (error) {
     console.log(error);
   }
