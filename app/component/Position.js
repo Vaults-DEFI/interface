@@ -3,12 +3,17 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Tooltip } from "antd";
 import {
   finaldeposit,
-  finalwithdraw,
+  Withdraw,
   parseDeposit,
-  previewWithdraw,
+  previewWithdraw, getToken1Balance
 } from "../BlockchainService";
+import { useAccount } from "wagmi";
+
+
 
 const Position = ({ data }) => {
+  const { address, isConnected } = useAccount()
+
   const [activeTab, setActiveTab] = useState("deposit");
 
   const [amount1, setAmount1] = useState("");
@@ -30,9 +35,6 @@ const Position = ({ data }) => {
         return;
       }
 
-      // Extract shares from the result
-      console.log("shares", result.shares);
-
       // Call finaldeposit with amount1, amount2, and shares
       await finaldeposit(amount1, amount2, result.shares);
     } catch (error) {
@@ -42,19 +44,7 @@ const Position = ({ data }) => {
 
   const handleWithdraw = async () => {
     try {
-      const result = await previewWithdraw(withdrawAmount);
-
-      if (!result) {
-        console.error(
-          "Error: previeweithdraw call failed or returned undefined"
-        );
-        return;
-      }
-
-      console.log("amount0", result.amount0);
-      console.log("amount1", result.amount1);
-
-      // await finalwithdraw(withdrawAmount, result.amount0, result.amount1)
+      await Withdraw(address, withdrawAmount);
     } catch (error) {
       console.error("withdraw error:", error);
     }
@@ -72,18 +62,16 @@ const Position = ({ data }) => {
 
       <div className="flex items-center justify-between">
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
-            activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
-          }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
+            }`}
           onClick={() => setActiveTab("deposit")}
         >
           Deposit
         </button>
 
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
-            activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
-          }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
+            }`}
           onClick={() => setActiveTab("withdraw")}
         >
           Withdraw
@@ -98,9 +86,8 @@ const Position = ({ data }) => {
               <span>Balance: 0.000</span>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                amount1 ? "border-orange-500" : ""
-              }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount1 ? "border-orange-500" : ""
+                }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item1}</p>
               <input
@@ -113,9 +100,8 @@ const Position = ({ data }) => {
               </button>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                amount2 ? "border-orange-500" : ""
-              }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount2 ? "border-orange-500" : ""
+                }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item2}</p>
               <input
@@ -188,9 +174,8 @@ const Position = ({ data }) => {
                 <span>Balance: {withdrawAmount}</span>
               </div>
               <div
-                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                  withdrawAmount ? "border-orange-500" : ""
-                } focus-within:border-orange-500`}
+                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${withdrawAmount ? "border-orange-500" : ""
+                  } focus-within:border-orange-500`}
               >
                 <p className="mx-2">Shares</p>
                 <input

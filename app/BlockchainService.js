@@ -2,6 +2,8 @@ import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
 import ERC20Abi from "./IERC20.json";
 
+const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC"
+
 export async function connectWallet() {
   if (typeof ethers === "undefined") {
     console.error("Ethers library is not loaded properly.");
@@ -23,7 +25,6 @@ export async function connectWallet() {
   }
 }
 
-const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC";
 
 export async function getContract() {
   const signer = await connectWallet();
@@ -31,14 +32,14 @@ export async function getContract() {
     contractAddress,
     contractAbi.abi,
     signer
-  ); 
+  );
   return contract;
 }
 
 export async function parseDeposit(amount0, amount1) {
   try {
     // Get the contract instance
-    const contract = await getContract(); 
+    const contract = await getContract();
     console.log("Contract address:", contract.address);
 
     // Convert input amounts to BigNumber
@@ -87,7 +88,7 @@ export async function parseDeposit(amount0, amount1) {
       console.error("Detailed error message:", error.error.message);
     }
     // Re-throw the error for further handling
-    throw error; 
+    throw error;
   }
 }
 
@@ -121,15 +122,9 @@ export async function finaldeposit(amount0, amount1, shares) {
     await approverUSDT.wait()
     console.log("Approved rUSDT")
 
-    // Set a custom gas limit
-    // const gasLimit = ethers.utils.hexlify(5000000); // Example value, adjust based on requirements
 
-    const tx = await contract.deposit(amount0BN, amount1BN, shares,
-      {
-        gasLimit: 500000
-      }); // Call the deposit function with gas limit
-
-    await tx.wait(); // Wait for the transaction to be mined
+    const tx = await contract.deposit(amount0BN, amount1BN, shares);
+    await tx.wait();
     console.log("Deposit successful");
 
   } catch (error) {
@@ -146,15 +141,15 @@ export async function finaldeposit(amount0, amount1, shares) {
 }
 
 
-export async function previewWithdraw(shares) {
+export async function Withdraw(address, withdrawAmount) {
   try {
     const contract = await getContract();
-    const sharesBN = ethers.utils.parseUnits(shares, 18);
-
-    console.log("shares.....", sharesBN.toString());
+    // console.log("user address", address);
+    // const userShares = await contract.balanceOf("0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
+    // console.log(Number(userShares))
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
-      sharesBN
+      withdrawAmount
     ]);
 
     const result = await contract.provider.call({
@@ -162,59 +157,30 @@ export async function previewWithdraw(shares) {
       data: data,
     });
 
-    console.log("Raw result:", result);
-
     const decodedResult = contract.interface.decodeFunctionResult(
       "previewWithdraw",
       result
     );
-    console.log("Decoded result:", decodedResult);
 
     const parsedResult = {
       amount0: decodedResult.amount0.toString(),
       amount1: decodedResult.amount1.toString(),
     }
     console.log("Parsed Deposit Result:", parsedResult);
-    return parsedResult;
+
+    const tx = await contract.withdraw(withdrawAmount, parsedResult.amount0, parsedResult.amount1)
+    await tx.wait()
+    console.log("withdraw done")
 
   } catch (error) {
     console.error("Preview withdraw error:", error);
     if (error.error && error.error.message) {
       console.error("Detailed error message:", error.error.message);
     }
-    throw error;   }
+    throw error;
+  }
 }
 
-// export async function finalwithdraw(shares, minAmount0, minAmount1) {
-//   try {
-//     const contract = await getContract();
-//     const sharesBN = ethers.utils.parseUnits(shares, 18);
-//     const minAmount0BN = ethers.utils.parseUnits(minAmount0, 18);
-//     const minAmount1BN = ethers.utils.parseUnits(minAmount1, 18);
-
-//     const signer = await connectWallet();
-
-
-//     const tx = await contract.withdraw(sharesBN, minAmount0BN, minAmount1BN, {
-//       gasLimit: 500000,
-//     });
-
-//     await tx.wait();
-//     console.log("Withdrawal successful");
-//     return true;
-//   } catch (error) {
-//     console.error("Withdrawal error:", error);
-//     if (error.data && error.data.message) {
-//       console.error("Detailed error message:", error.data.message);
-//     } else if (error.message) {
-//       console.error("Error message:", error.message);
-//     }
-//     if (error.transaction) {
-//       console.error("Transaction details:", error.transaction);
-//     }
-//     return false;
-//   }
-// }
 
 
 
