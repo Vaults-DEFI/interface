@@ -1,5 +1,5 @@
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { rootstockTestnet } from "wagmi/chains";
+// import { rootstockTestnet } from "wagmi/chains";
 
 const localhost = {
   id: 30,
@@ -26,7 +26,7 @@ export const config = getDefaultConfig({
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   chains: [
     localhost, 
-    rootstockTestnet,
+    // rootstockTestnet,
   ],
   ssr: true,
 });
