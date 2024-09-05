@@ -2,6 +2,8 @@ import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
 import ERC20Abi from "./IERC20.json";
 
+const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC"
+
 export async function connectWallet() {
   if (typeof ethers === "undefined") {
     console.error("Ethers library is not loaded properly.");
@@ -23,7 +25,6 @@ export async function connectWallet() {
   }
 }
 
-const contractAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC";
 
 export async function getContract() {
   const signer = await connectWallet();
@@ -32,12 +33,14 @@ export async function getContract() {
     contractAbi.abi,
     signer
   );
+  );
   return contract;
 }
 
 export async function parseDeposit(amount0, amount1) {
   try {
     // Get the contract instance
+    const contract = await getContract();
     const contract = await getContract();
     console.log("Contract address:", contract.address);
 
@@ -131,27 +134,15 @@ export async function finaldeposit(
     );
     console.log("Checksum address:", checksumrUSDT);
 
-    const rUSDTContract = new ethers.Contract(
-      checksumrUSDT,
-      ERC20Abi.abi,
-      signer
-    );
-    console.log("...", rUSDTContract);
-    const approverUSDT = await rUSDTContract.approve(
-      contractAddress,
-      amount1BN
-    );
-    await approverUSDT.wait();
-    console.log("Approved rUSDT");
+    const rUSDTContract = new ethers.Contract(checksumrUSDT, ERC20Abi.abi, signer)
+    console.log("...", rUSDTContract)
+    const approverUSDT = await rUSDTContract.approve(contractAddress, amount1BN);
+    await approverUSDT.wait()
+    console.log("Approved rUSDT")
 
-    // Set a custom gas limit
-    // const gasLimit = ethers.utils.hexlify(5000000); // Example value, adjust based on requirements
 
-    const tx = await contract.deposit(amount0BN, amount1BN, shares, {
-      gasLimit: 500000,
-    }); // Call the deposit function with gas limit
-
-    await tx.wait(); // Wait for the transaction to be mined
+    const tx = await contract.deposit(amount0BN, amount1BN, shares);
+    await tx.wait();
     console.log("Deposit successful");
   } catch (error) {
     console.error("Deposit error:", error);
@@ -166,15 +157,16 @@ export async function finaldeposit(
   }
 }
 
-export async function previewWithdraw(shares) {
+
+export async function Withdraw(address, withdrawAmount) {
   try {
     const contract = await getContract();
-    const sharesBN = ethers.utils.parseUnits(shares, 18);
-
-    console.log("shares.....", sharesBN.toString());
+    // console.log("user address", address);
+    // const userShares = await contract.balanceOf("0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
+    // console.log(Number(userShares))
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
-      sharesBN,
+      withdrawAmount
     ]);
 
     const result = await contract.provider.call({
@@ -182,25 +174,29 @@ export async function previewWithdraw(shares) {
       data: data,
     });
 
-    console.log("Raw result:", result);
-
     const decodedResult = contract.interface.decodeFunctionResult(
       "previewWithdraw",
       result
     );
-    console.log("Decoded result:", decodedResult);
 
     const parsedResult = {
       amount0: decodedResult.amount0.toString(),
       amount1: decodedResult.amount1.toString(),
     };
     console.log("Parsed Deposit Result:", parsedResult);
-    return parsedResult;
+
+    const tx = await contract.withdraw(withdrawAmount, parsedResult.amount0, parsedResult.amount1)
+    await tx.wait()
+    console.log("withdraw done")
   } catch (error) {
     console.error("Preview withdraw error:", error);
     if (error.error && error.error.message) {
       console.error("Detailed error message:", error.error.message);
     }
+    throw error;
+  }
+}
+
     throw error;
   }
 }
