@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Tooltip } from "antd";
-import { finaldeposit, parseDeposit } from "../BlockchainService";
+import {
+  finaldeposit,
+  finalwithdraw,
+  parseDeposit,
+  previewWithdraw,
+} from "../BlockchainService";
 
 const Position = ({ data }) => {
   const [activeTab, setActiveTab] = useState("deposit");
@@ -9,9 +14,9 @@ const Position = ({ data }) => {
   const [amount1, setAmount1] = useState("");
   const [amount2, setAmount2] = useState("");
 
-  const [withdrawAmount, setWithdrawAmount] = useState(10); 
-  const [withdrawAmount1, setWithdrawAmount1] = useState(""); 
-  const [withdrawAmount2, setWithdrawAmount2] = useState(""); 
+  const [amount, setAmount] = useState(10);
+
+  const [withdrawAmount, setWithdrawAmount] = useState("");
 
   const handleDeposit = async () => {
     try {
@@ -29,14 +34,31 @@ const Position = ({ data }) => {
       console.log("shares", result.shares);
 
       // Call finaldeposit with amount1, amount2, and shares
-
       await finaldeposit(amount1, amount2, result.shares);
-
     } catch (error) {
       console.error("Deposit error:", error);
     }
   };
 
+  const handleWithdraw = async () => {
+    try {
+      const result = await previewWithdraw(withdrawAmount);
+
+      if (!result) {
+        console.error(
+          "Error: previeweithdraw call failed or returned undefined"
+        );
+        return;
+      }
+
+      console.log("amount0", result.amount0);
+      console.log("amount1", result.amount1);
+
+      // await finalwithdraw(withdrawAmount, result.amount0, result.amount1)
+    } catch (error) {
+      console.error("withdraw error:", error);
+    }
+  };
 
   return (
     <div className="w-full flex flex-col gap-[2px]">
@@ -50,16 +72,18 @@ const Position = ({ data }) => {
 
       <div className="flex items-center justify-between">
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
-            }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
+            activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
+          }`}
           onClick={() => setActiveTab("deposit")}
         >
           Deposit
         </button>
 
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
-            }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
+            activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
+          }`}
           onClick={() => setActiveTab("withdraw")}
         >
           Withdraw
@@ -74,8 +98,9 @@ const Position = ({ data }) => {
               <span>Balance: 0.000</span>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount1 ? "border-orange-500" : ""
-                }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                amount1 ? "border-orange-500" : ""
+              }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item1}</p>
               <input
@@ -88,8 +113,9 @@ const Position = ({ data }) => {
               </button>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount2 ? "border-orange-500" : ""
-                }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                amount2 ? "border-orange-500" : ""
+              }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item2}</p>
               <input
@@ -155,7 +181,7 @@ const Position = ({ data }) => {
 
       {activeTab === "withdraw" && (
         <div className="bg-[#1E212A] text-gray-400 rounded-t rounded-b-xl px-5 py-5 mt-[0.4px]">
-          {withdrawAmount > 0 ? (
+          {amount > 0 ? (
             <div className="flex flex-col">
               <div className="flex justify-between items-center text-sm mb-2">
                 <span>Withdraw Reserved Liquidity</span>
@@ -163,36 +189,22 @@ const Position = ({ data }) => {
               </div>
               <div
                 className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                  withdrawAmount1 ? "border-orange-500" : ""
+                  withdrawAmount ? "border-orange-500" : ""
                 } focus-within:border-orange-500`}
               >
-                <p className="mx-2">{data.item1}</p>
+                <p className="mx-2">Shares</p>
                 <input
                   className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
-                  value={withdrawAmount1}
-                  onChange={(e) => setWithdrawAmount1(e.target.value)}
+                  value={withdrawAmount}
+                  onChange={(e) => setWithdrawAmount(e.target.value)}
                 />
                 <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
                   MAX
                 </button>
               </div>
-              <div
-                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                  withdrawAmount2 ? "border-orange-500" : ""
-                } focus-within:border-orange-500`}
-              >
-                <p className="mx-2">{data.item2}</p>
-                <input
-                  className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
-                  value={withdrawAmount2}
-                  onChange={(e) => setWithdrawAmount2(e.target.value)}
-                />
-                <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
-                  MAX
-                </button>
-              </div>
+
               <button
-                // onClick={handleWithdraw}
+                onClick={handleWithdraw}
                 className="w-full btn-text-white rounded-xl bg-orange-700 hover:bg-orange-600 p-3 transition duration-300 text-nowrap"
               >
                 Withdraw
