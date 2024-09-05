@@ -1,10 +1,37 @@
 import React, { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Tooltip } from "antd";
+import { finaldeposit, parseDeposit } from "../BlockchainService";
 
-const Position = () => {
+const Position = ({ data }) => {
   const [activeTab, setActiveTab] = useState("deposit");
-  const [amount, setAmount] = useState(0);
+
+  const [amount1, setAmount1] = useState("");
+  const [amount2, setAmount2] = useState("");
+
+  const handleDeposit = async () => {
+    try {
+      // Call parseDeposit to get the result
+      const result = await parseDeposit(amount1, amount2);
+  console.log(result);
+      // Check if result is undefined or null before proceeding
+      if (!result) {
+        console.error("Error: previewDeposit call failed or returned undefined");
+        return;
+      }
+  
+      // Extract shares from the result
+      // const { shares } = result;
+
+      // Call finaldeposit with amount1, amount2, and shares
+      // const depositout = await finaldeposit(amount1, amount2, shares);
+      console.log("Deposit successful:", depositout);
+      
+    } catch (error) {
+      console.error("Deposit error:", error);
+    }
+  };
+  
 
   return (
     <div className="w-full flex flex-col gap-[2px]">
@@ -45,21 +72,39 @@ const Position = () => {
             </div>
             <div
               className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                amount ? "border-orange-500" : ""
+                amount1 ? "border-orange-500" : ""
               }focus-within:border-orange-500`}
             >
-              <p className="mx-2">WETH</p>
+              <p className="mx-2">{data.item1}</p>
               <input
-                className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%]"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
+                value={amount1}
+                onChange={(e) => setAmount1(e.target.value)}
+              />
+              <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
+                MAX
+              </button>
+            </div>
+            <div
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                amount2 ? "border-orange-500" : ""
+              }focus-within:border-orange-500`}
+            >
+              <p className="mx-2">{data.item2}</p>
+              <input
+                className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
+                value={amount2}
+                onChange={(e) => setAmount2(e.target.value)}
               />
               <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
                 MAX
               </button>
             </div>
           </div>
-          <button className="w-full btn-text-white rounded-xl bg-orange-700 hover:bg-orange-600 p-3 transition duration-300 text-nowrap">
+          <button
+            onClick={handleDeposit}
+            className="w-full btn-text-white rounded-xl bg-orange-700 hover:bg-orange-600 p-3 transition duration-300 text-nowrap"
+          >
             Deposit
           </button>
           <div className="mt-7 text-sm flex flex-col gap-2">

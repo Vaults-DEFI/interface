@@ -32,7 +32,7 @@ const DetailsPage = () => {
             <Left data = {item} />
           </div>
           <div className="flex flex-col md:flex-row lg:flex-col w-full lg:w-[39%] gap-2">
-            <Position />
+            <Position data = {item} />
             <LiquidityMiningProgram />
           </div>
         </div>{" "}

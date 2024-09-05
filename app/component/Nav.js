@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { useState } from "react";
+import logo from "../../public/image.png"
+import Image from "next/image";
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,8 +14,10 @@ const Nav = () => {
 
   return (
     <nav className="bg-black z-40 text-white px-2 xl:px-10 py-7 flex justify-between items-center sm:w-[90%] mx-auto">
-      <div className="flex flex-row items-center space-x-10 xl:space-x-16">
-        <div className="p-2 text-orange-500">LOGO Vault</div>
+      <div className="flex flex-row items-center space-x-10">
+        <div className="p-2">
+          <Image src={logo} alt="logo" className="w-auto h-[50px]"></Image>
+        </div>
         <div className="hidden min-[900px]:flex space-x-5 xl:space-x-9">
           <Link href="/">Liquidity Vaults</Link>
           <Link href="/">Points</Link>

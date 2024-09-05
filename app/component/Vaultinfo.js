@@ -13,8 +13,8 @@ const getHeading = (derivatives) => {
   // if (derivatives.includes("CAMELOT")) {
   //   return "Camelot Stable Vault";
   // }
-  
-  return "Sushi CLM - WRBTC/rUSDT";
+
+  return "Sushi CLM - ";
 };
 
 const Vaultinfo = ({ data }) => {
@@ -24,10 +24,19 @@ const Vaultinfo = ({ data }) => {
     <div className="flex flex-col gap-7 my-5 pb-3 border-b-2 border-gray-800">
       <div className="flex max-[500px]:flex-col-reverse max-[500px]:items-start items-center justify-between px-3 overflow-hidden">
         <div className="py-4">
-          <h1 className="py-4 max-[500px]:text-[3.7vw] text-sm md:text-xl lg:text-2xl text-orange-500">{heading}</h1>
+          <h1 className="py-4 max-[500px]:text-[3.7vw] text-sm md:text-xl lg:text-2xl text-orange-500">
+            {heading} {data.item1}/{data.item2}
+          </h1>
           <h1 className="max-[500px]:text-[9vw] text-4xl md:text-6xl lg:text-7xl font-extrabold flex items-center max-[500px]:gap-3 gap-7">
-            <Image src={data.icon1} alt="icon" width={65} height={65} className="w-[40px] md:w-[65px]"></Image>
-            {data.pair}
+            <Image
+              src={data.icon1}
+              alt="icon"
+              width={65}
+              height={65}
+              className="w-[40px] md:w-[65px]"
+            ></Image>
+            {/* {data.pair} */}
+            {data.item1} - {data.item2}
           </h1>
         </div>
         <div className="">

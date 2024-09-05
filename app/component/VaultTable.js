@@ -23,9 +23,9 @@ const VaultTable = ({ data }) => {
     if (activeTab === "myVault") {
       return false;
     }
-    if (activeTab === "closed") {
-      return vault.apr === "0.00%";
-    }
+    // if (activeTab === "closed") {
+    //   return vault.apr === "0.00%";
+    // }
     return true;
   });
 
@@ -57,14 +57,14 @@ const VaultTable = ({ data }) => {
           >
             My Vault
           </button>
-          <button
+          {/* <button
             className={`font-medium text-xl p-2 ${
               activeTab === "closed" ? "" : "text-[#6B7280]"
             }`}
             onClick={() => handleTabChange("closed")}
           >
             Closed
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -154,20 +154,33 @@ const VaultTable = ({ data }) => {
               {filteredData.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="text-center py-14 text-gray-500">
-                    <p className="w-[70%] m-auto text-xs">
-                      It looks like this category is currently empty.
-                      <br />
-                      In the meantime, explore our CLM category, where you can
-                      find active vaults!
-                      <br />
-                      <button
-                        onClick={() => handleFilterChange("clm")}
-                        className="text-gray-400 text-sm p-2"
-                      >
-                        {" "}
-                        Go to CLM Vaults
-                      </button>
-                    </p>
+                    {activeTab === "myVault" ? (
+                      <p className="w-[70%] m-auto text-sm">
+                        ✨ It looks like your vault is empty. Deposit some
+                        assets to start managing and growing your wealth
+                        <br />
+                        <button
+                          onClick={() => handleFilterChange("clm")}
+                          className="underline underline-offset-2 font-medium hover:text-gray-400"
+                        >
+                          {" "}
+                          Go to CLM Vaults
+                        </button>
+                      </p>
+                    ) : (
+                      <p className="w-[75%] m-auto text-sm">
+                        It looks like this category is currently empty.
+                        In the meantime, explore our CLM category, where you can
+                        find active vaults!
+                        <br />
+                        <button
+                          onClick={() => handleFilterChange("clm")}
+                          className="underline underline-offset-2 font-medium hover:text-gray-400"
+                        >
+                          Go to CLM Vaults
+                        </button>
+                      </p>
+                    )}
                   </td>
                 </tr>
               ) : (
@@ -193,7 +206,8 @@ const VaultTable = ({ data }) => {
                                 className="rounded-full"
                               ></Image>
                             </div>
-                            {vault.pair}
+                            {/* {vault.pair} */}
+                            {vault.item1} - {vault.item2}
                           </div>
                         </td>
 

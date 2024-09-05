@@ -1,11 +1,18 @@
 import React from "react";
 import LiquidityDistributionChart from "./textareachart";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { Tooltip } from "antd";
 
-const Analytics = ({data}) => {
+const graphdata = [
+  { name: "WRBTC", value: 78.15 },
+  { name: "rUSDT", value: 21.85 },
+];
+
+const Analytics = ({ data }) => {
   return (
     <div>
       <div className="bg-[#1E212A] rounded-xl py-3 px-4">
-        <p className="text-sm text-gray-400 flex items-center gap-2">
+        <p className="text-sm text-gray-400 flex items-center gap-2 text-justify">
           ⓘ Analytics may not always be 100% accurate. At times, data may be
           inaccurate due to bugs, RPC outages, or issues with 3rd party APIs
           among other potential reasons. If you see any discrepancies, please
@@ -16,46 +23,65 @@ const Analytics = ({data}) => {
       <div className="flex flex-col bg-[#1E212A] rounded-xl p-6 my-6">
         <h3 className="text-xl mb-4">LP Breakdown</h3>
 
-        <div className="flex">
+        <div className="flex w-full items-center justify-between">
+          <div className="w-[50%] h-[300px] flex justify-between items-center">
+            <ResponsiveContainer width="100%" height="100%" className="w-[80%]">
+              <PieChart width={400} height={400}>
+                <Pie
+                  dataKey="value"
+                  data={graphdata}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  fill="#cbd5e1"
+                  paddingAngle={5}
+                  label
+                />
+            
+              </PieChart>
+            </ResponsiveContainer>
 
-          <div className="w-48 h-48 border border-gray-400 rounded-xl flex items-center justify-start p-8">
-<div className="bg-gray-50 rounded-full w-32 h-32"></div>
+            <div>
+              <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm mb-2"> WRBTC - 78.15%</div>
+              <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm"> rUSDT - 21.85%</div>
+            </div>
           </div>
 
-          <div className="w-1/2">
+          {/* <div className="w-48 h-48 border border-gray-400 rounded-xl flex items-center justify-start p-8">
+            <div className="bg-gray-50 rounded-full w-32 h-32"></div>
+          </div> */}
+
+          <div className="w-[40%]">
             <table className="w-full">
               <thead>
                 <tr className="text-gray-400">
-                  <th className="text-left">ASSET</th>
-                  <th className="text-right">TOKEN AMOUNT</th>
-                  <th className="text-right">VALUE</th>
+                  <th>ASSET</th>
+                  <th>TOKEN AMOUNT</th>
+                  <th>VALUE</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="py-2">
-                    <span className="bg-orange-500 text-black px-2 py-1 rounded">
-                      ₿ WBTC
-                    </span>
+                  <td>
+                      WRBTC
                   </td>
-                  <td className="text-right">3.13K</td>
-                  <td className="text-right">$178.30M</td>
+                  <td>3.13K</td>
+                  <td>$178.30M</td>
                 </tr>
                 <tr>
-                  <td className="py-2">
-                    <span className="bg-blue-500 text-white px-2 py-1 rounded">
-                      $ USDC
-                    </span>
+                  <td>
+                      rUSDT
                   </td>
-                  <td className="text-right">3.13K</td>
-                  <td className="text-right">$3.13K</td>
+                  <td>3.13K</td>
+                  <td>$3.13K</td>
                 </tr>
                 <tr>
-                  <td className="py-2">
-                    <span className="bg-gray-700 px-2 py-1 rounded">LP</span>
+                  <td>
+                    LP
                   </td>
-                  <td className="text-right">0.00</td>
-                  <td className="text-right">$256.45K</td>
+                  <td>0.00</td>
+                  <td>$256.45K</td>
                 </tr>
               </tbody>
             </table>
