@@ -23,9 +23,9 @@ const Analytics = ({ data }) => {
       <div className="flex flex-col bg-[#1E212A] rounded-xl p-6 my-6">
         <h3 className="text-xl mb-4">LP Breakdown</h3>
 
-        <div className="flex w-full items-center justify-between">
-          <div className="w-[50%] h-[300px] flex justify-between items-center">
-            <ResponsiveContainer width="100%" height="100%" className="w-[80%]">
+        <div className="flex w-full items-center justify-between flex-col md:flex-row lg:flex-col xl:flex-row gap-4">
+          <div className=" w-full md:w-[50%] lg:w-full xl:w-[50%] h-[300px] flex justify-between items-center flex-col sm:flex-row">
+            <ResponsiveContainer width="100%" height="100%" className=" w-[60%] xl:w-[80%]">
               <PieChart width={400} height={400}>
                 <Pie
                   dataKey="value"
@@ -38,13 +38,18 @@ const Analytics = ({ data }) => {
                   paddingAngle={5}
                   label
                 />
-            
               </PieChart>
             </ResponsiveContainer>
 
             <div>
-              <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm mb-2"> WRBTC - 78.15%</div>
-              <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm"> rUSDT - 21.85%</div>
+              <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm mb-2">
+                {" "}
+                WRBTC - 78.15%
+              </div>
+              <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm">
+                {" "}
+                rUSDT - 21.85%
+              </div>
             </div>
           </div>
 
@@ -52,36 +57,30 @@ const Analytics = ({ data }) => {
             <div className="bg-gray-50 rounded-full w-32 h-32"></div>
           </div> */}
 
-          <div className="w-[40%]">
-            <table className="w-full">
+          <div className="w-full md:w-[45%] lg:w-full xl:w-[45%] border border-gray-600 rounded-lg">
+            <table className="w-full border border-transparent border-spacing-2">
               <thead>
-                <tr className="text-gray-400">
-                  <th>ASSET</th>
-                  <th>TOKEN AMOUNT</th>
-                  <th>VALUE</th>
+                <tr className="text-gray-400 border-b-2 border-gray-600">
+                  <th className="text-center p-3 ">ASSET</th>
+                  <th className="text-center p-3 ">TOKEN AMOUNT</th>
+                  <th className="text-center p-3 ">VALUE</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>
-                      WRBTC
-                  </td>
-                  <td>3.13K</td>
-                  <td>$178.30M</td>
+                  <td className="text-center px-3 py-2 ">WRBTC</td>
+                  <td className="text-center px-3 py-2 ">3.13K</td>
+                  <td className="text-center px-3 py-2 ">$178.30M</td>
                 </tr>
                 <tr>
-                  <td>
-                      rUSDT
-                  </td>
-                  <td>3.13K</td>
-                  <td>$3.13K</td>
+                  <td className="text-center px-3 py-2 ">rUSDT</td>
+                  <td className="text-center px-3 py-2 ">3.13K</td>
+                  <td className="text-center px-3 py-2 ">$3.13K</td>
                 </tr>
                 <tr>
-                  <td>
-                    LP
-                  </td>
-                  <td>0.00</td>
-                  <td>$256.45K</td>
+                  <td className="text-center px-3 py-2 ">LP</td>
+                  <td className="text-center px-3 py-2 ">0.00</td>
+                  <td className="text-center px-3 py-2 ">$256.45K</td>
                 </tr>
               </tbody>
             </table>

@@ -9,29 +9,33 @@ const Position = ({ data }) => {
   const [amount1, setAmount1] = useState("");
   const [amount2, setAmount2] = useState("");
 
+  const [withdrawAmount, setWithdrawAmount] = useState(10); 
+  const [withdrawAmount1, setWithdrawAmount1] = useState(""); 
+  const [withdrawAmount2, setWithdrawAmount2] = useState(""); 
+
   const handleDeposit = async () => {
     try {
       // Call parseDeposit to get the result
       const result = await parseDeposit(amount1, amount2);
-  console.log(result);
+      console.log(result);
       // Check if result is undefined or null before proceeding
       if (!result) {
-        console.error("Error: previewDeposit call failed or returned undefined");
+        console.error(
+          "Error: previewDeposit call failed or returned undefined"
+        );
         return;
       }
-  
+
       // Extract shares from the result
       // const { shares } = result;
 
       // Call finaldeposit with amount1, amount2, and shares
       // const depositout = await finaldeposit(amount1, amount2, shares);
-      console.log("Deposit successful:", depositout);
-      
+      // console.log("Deposit successful:", depositout);
     } catch (error) {
       console.error("Deposit error:", error);
     }
   };
-  
 
   return (
     <div className="w-full flex flex-col gap-[2px]">
@@ -142,13 +146,83 @@ const Position = ({ data }) => {
         </div>
       )}
 
-      {activeTab === "withdraw" && (
+      {/* {activeTab === "withdraw" && (
         <div className="bg-[#1E212A] rounded-t rounded-b-xl px-5 py-3 mt-[1px]">
           <span className="text-sm my-3">Withdraw Reserved Liquidity</span>
 
           <div className="text-center py-4">
             No reserved amount available to withdraw
           </div>
+        </div>
+      )} */}
+
+      {activeTab === "withdraw" && (
+        <div className="bg-[#1E212A] text-gray-400 rounded-t rounded-b-xl px-5 py-5 mt-[0.4px]">
+          {withdrawAmount > 0 ? (
+            <div className="flex flex-col">
+              <div className="flex justify-between items-center text-sm mb-2">
+                <span>Withdraw Reserved Liquidity</span>
+                <span>Balance: {withdrawAmount}</span>
+              </div>
+              <div
+                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                  withdrawAmount1 ? "border-orange-500" : ""
+                } focus-within:border-orange-500`}
+              >
+                <p className="mx-2">{data.item1}</p>
+                <input
+                  className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
+                  value={withdrawAmount1}
+                  onChange={(e) => setWithdrawAmount1(e.target.value)}
+                />
+                <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
+                  MAX
+                </button>
+              </div>
+              <div
+                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
+                  withdrawAmount2 ? "border-orange-500" : ""
+                } focus-within:border-orange-500`}
+              >
+                <p className="mx-2">{data.item2}</p>
+                <input
+                  className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
+                  value={withdrawAmount2}
+                  onChange={(e) => setWithdrawAmount2(e.target.value)}
+                />
+                <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
+                  MAX
+                </button>
+              </div>
+              <button
+                // onClick={handleWithdraw}
+                className="w-full btn-text-white rounded-xl bg-orange-700 hover:bg-orange-600 p-3 transition duration-300 text-nowrap"
+              >
+                Withdraw
+              </button>
+              <div className="mt-7 text-sm flex flex-col gap-2">
+                <div className="flex justify-between">
+                  <span className="flex items-center gap-2">
+                    Withdraw Fee{" "}
+                    <Tooltip
+                      placement="bottom"
+                      color="#111827"
+                      width="400px"
+                      overlayInnerStyle={{ width: "280px" }}
+                      title="A withdraw fee is a one-time charge applied at the time of withdrawal."
+                    >
+                      <AiOutlineInfoCircle />
+                    </Tooltip>
+                  </span>
+                  <span>0%</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              No reserved amount available to withdraw
+            </div>
+          )}
         </div>
       )}
     </div>

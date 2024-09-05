@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <div className="w-full fixed top-0"><Nav /></div>
+          <div className="w-full fixed top-0 z-10"><Nav /></div>
           
           {children}
         </Providers>
