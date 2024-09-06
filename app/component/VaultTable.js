@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getContract } from "../BlockchainService";
 import { ethers } from "ethers";
+import { useAccount } from 'wagmi';
 
 export async function position(address, contractAddress) {
   const contract = await getContract(contractAddress);
@@ -15,6 +16,7 @@ export async function position(address, contractAddress) {
 }
 
 const VaultTable = ({ data }) => {
+  const { address } = useAccount(); 
   const [activeTab, setactiveTab] = useState("vaults");
   const [activeButton, setactiveButton] = useState("all");
 
@@ -26,10 +28,11 @@ const VaultTable = ({ data }) => {
         try {
           // Fetch position for each vault address
           const vaultPosition = await position(
-            vault.address,
+            address,
             vault.contractAddress
-          ); // vault.address represents the vault's address
-          newPositions[vault.address] = Number(vaultPosition);
+          );
+
+          newPositions[vault.contractAddress] = Number(vaultPosition);
         } catch (error) {
           console.error(
             `Error fetching position for vault ${vault.address}:`,
@@ -43,7 +46,7 @@ const VaultTable = ({ data }) => {
     if (data.length > 0) {
       fetchPositions();
     }
-  }, [data]);
+  }, [data, address]);
 
   const handleTabChange = (tab) => {
     setactiveTab(tab);
