@@ -68,7 +68,7 @@ const Vaultinfo = ({ data }) => {
               <AiOutlineInfoCircle />
             </Tooltip>
           </p>
-          <p>459.58%</p>
+          <p>15.18%</p>
         </div>
         <div className="text-nowrap text-xs flex justify-between items-center p-5 max-[500px]:w-full w-[48%] lg:w-[24%] bg-[#1E212A] rounded-xl">
           <p className="flex items-center gap-2">
@@ -83,7 +83,7 @@ const Vaultinfo = ({ data }) => {
               <AiOutlineInfoCircle data-tip="Reward APR description" />
             </Tooltip>
           </p>
-          <p>459.58</p>
+          <p>25.28%</p>
         </div>
         <div className="text-nowrap text-xs flex justify-between items-center p-5 max-[500px]:w-full w-[48%] lg:w-[24%] bg-[#1E212A] rounded-xl">
           <p className="flex items-center gap-2">
@@ -97,7 +97,7 @@ const Vaultinfo = ({ data }) => {
               <AiOutlineInfoCircle data-tip="Fee APR description" />
             </Tooltip>
           </p>
-          <p>459.58</p>
+          <p>38.15%</p>
         </div>
       </div>
     </div>
