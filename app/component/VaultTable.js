@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getContract } from "../BlockchainService";
 import { ethers } from "ethers";
-import { useAccount } from 'wagmi';
+import { useAccount } from "wagmi";
 
 export async function position(address, contractAddress) {
   const contract = await getContract(contractAddress);
@@ -16,9 +16,10 @@ export async function position(address, contractAddress) {
 }
 
 const VaultTable = ({ data }) => {
-  const { address } = useAccount(); 
+  const { address } = useAccount();
   const [activeTab, setactiveTab] = useState("vaults");
   const [activeButton, setactiveButton] = useState("all");
+  const [showMainnetMessage, setShowMainnetMessage] = useState(false);
 
   const [positions, setPositions] = useState({});
   useEffect(() => {
@@ -27,10 +28,7 @@ const VaultTable = ({ data }) => {
       for (let vault of data) {
         try {
           // Fetch position for each vault address
-          const vaultPosition = await position(
-            address,
-            vault.contractAddress
-          );
+          const vaultPosition = await position(address, vault.contractAddress);
 
           newPositions[vault.contractAddress] = Number(vaultPosition);
         } catch (error) {
@@ -83,15 +81,17 @@ const VaultTable = ({ data }) => {
       <div>
         <div className="space-x-3 md:space-x-7 xl:space-x-10 my-2">
           <button
-            className={`font-medium text-xl p-2 ${activeTab === "vaults" ? "" : "text-[#6B7280]"
-              }`}
+            className={`font-medium text-xl p-2 ${
+              activeTab === "vaults" ? "" : "text-[#6B7280]"
+            }`}
             onClick={() => handleTabChange("vaults")}
           >
             Vaults
           </button>
           <button
-            className={`font-medium text-xl p-2 ${activeTab === "myVault" ? "" : "text-[#6B7280]"
-              }`}
+            className={`font-medium text-xl p-2 ${
+              activeTab === "myVault" ? "" : "text-[#6B7280]"
+            }`}
             onClick={() => handleTabChange("myVault")}
           >
             My Vault
@@ -161,7 +161,7 @@ const VaultTable = ({ data }) => {
               <tr>
                 <div className="w-full bg-[#2b2E37] rounded-t-xl mb-1">
                   <td>
-                    <div className="whitespace-nowrap w-[200px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    <div className="whitespace-nowrap w-[260px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Pair
                     </div>
                   </td>
@@ -226,11 +226,111 @@ const VaultTable = ({ data }) => {
                 </tr>
               ) : (
                 filteredData.map((vault, index) => (
-                  <tr key={vault.id}>
-                    <Link href={`/${vault.id}`}>
+                  <tr
+                    key={vault.id}
+                    onClick={(e) => {
+                      if (vault.id === "2") {
+                        e.preventDefault(); // Prevent navigation for vault.id === '2'
+                        setShowMainnetMessage(true); // Show message
+                      }
+                    }}
+                  >
+                    {vault.id !== "2" ? (
+                      <Link href={`/${vault.id}`}>
+                        <div className="rounded-[5px] mb-1 overflow-hidden w-full bg-[#1E212A] hover:bg-[#2b2E37]">
+                          <td>
+                            <div className="whitespace-nowrap w-[260px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider flex items-center gap-4">
+                              <div className="flex items-center">
+                                <Image
+                                  src={vault.icon1}
+                                  alt="arbitrum"
+                                  width={20}
+                                  height={20}
+                                  className="rounded-full"
+                                ></Image>
+                                <Image
+                                  src={vault.icon2}
+                                  alt="arbitrum"
+                                  width={20}
+                                  height={20}
+                                  className="rounded-full"
+                                ></Image>
+                              </div>
+                              {/* {vault.pair} */}
+                              {vault.item1} - {vault.item2}
+                              {vault.id === "1" && (
+                                <span className="flex items-center ml-2 text-xs text-green-500 drop-shadow-[0_2px_6px_rgba(251,91,13,0.8)]">
+                                  <div className="w-2 h-2 mr-2 rounded-full bg-green-500 drop-shadow-[0_2px_6px_rgba(251,91,13,0.8)]"></div>
+                                  <span>Live </span>
+                                </span>
+                              )}
+                            </div>
+                          </td>
+
+                          <td>
+                            <div className="whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider underline [text-decoration-style:dashed] [text-underline-offset:4px]">
+                              {vault.apr}
+                            </div>
+                          </td>
+
+                          <td>
+                            <div className="my-auto whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                              {vault.tvl}
+                            </div>
+                          </td>
+
+                          <td>
+                            <div className="whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                              {positions[vault.contractAddress] || "-"}
+                            </div>
+                          </td>
+
+                          <td>
+                            <div className="min-w-[250px] whitespace-nowrap pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider flex items-center">
+                              {vault.derivatives.length === 2 ? (
+                                <div className="flex items-center gap-1">
+                                  <Image
+                                    src={vault.icons[0]}
+                                    alt={vault.derivatives[0]}
+                                    width={16}
+                                    height={16}
+                                    className="rounded-full"
+                                  />
+                                  {vault.derivatives[0]} /
+                                  <Image
+                                    src={vault.icons[1]}
+                                    alt={vault.derivatives[1]}
+                                    width={16}
+                                    height={16}
+                                    className="rounded-full"
+                                  />
+                                  {vault.derivatives[1]}
+                                </div>
+                              ) : (
+                                vault.derivatives.map((derivative, index) => (
+                                  <span
+                                    key={index}
+                                    className="flex items-center gap-1"
+                                  >
+                                    <Image
+                                      src={vault.icons[index]}
+                                      alt={derivative}
+                                      width={16}
+                                      height={16}
+                                      className="rounded-full"
+                                    />
+                                    {derivative}
+                                  </span>
+                                ))
+                              )}
+                            </div>
+                          </td>
+                        </div>
+                      </Link>
+                    ) : (
                       <div className="rounded-[5px] mb-1 overflow-hidden w-full bg-[#1E212A] hover:bg-[#2b2E37]">
                         <td>
-                          <div className="whitespace-nowrap w-[200px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider flex items-center gap-4">
+                          <div className="whitespace-nowrap w-[260px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider flex items-center gap-4">
                             <div className="flex items-center">
                               <Image
                                 src={vault.icon1}
@@ -249,11 +349,23 @@ const VaultTable = ({ data }) => {
                             </div>
                             {/* {vault.pair} */}
                             {vault.item1} - {vault.item2}
+                            {vault.id === "1" && (
+                              <span className="flex items-center ml-2 text-xs text-green-500 drop-shadow-[0_2px_6px_rgba(251,91,13,0.8)]">
+                                <div className="w-2 h-2 mr-2 rounded-full bg-green-500 drop-shadow-[0_2px_6px_rgba(251,91,13,0.8)]"></div>
+                                <span>Live </span>
+                              </span>
+                            )}
                           </div>
                         </td>
 
                         <td>
-                          <div className="whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider underline [text-decoration-style:dashed] [text-underline-offset:4px]">
+                          <div
+                            className={`whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                              vault.id === "1"
+                                ? "underline [text-decoration-style:dashed] [text-underline-offset:4px]"
+                                : ""
+                            }`}
+                          >
                             {vault.apr}
                           </div>
                         </td>
@@ -266,7 +378,7 @@ const VaultTable = ({ data }) => {
 
                         <td>
                           <div className="whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                            {positions[vault.address] || "-"}
+                            {positions[vault.contractAddress] || "-"}
                           </div>
                         </td>
 
@@ -311,12 +423,17 @@ const VaultTable = ({ data }) => {
                           </div>
                         </td>
                       </div>
-                    </Link>
+                    )}
                   </tr>
                 ))
               )}
             </tbody>
           </table>
+          {showMainnetMessage && (
+            <div className="text-orange-500 font-medium mt-4">
+              WRBTC-rUSDC vault is live now, you can check that!
+            </div>
+          )}
         </main>
       </div>
     </div>
