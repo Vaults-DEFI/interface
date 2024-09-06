@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# RacineFi Vault - README
 
-## Getting Started
+## **Description**
+RacineFi is a decentralized, automated vault platform that maximizes returns for users by dynamically managing liquidity across decentralized exchanges (DEXs) and yield farms. The platform automates liquidity rebalancing, reward harvesting, and reinvestment to ensure users grow their investments with zero platform fees.
 
-First, run the development server:
+### **Key Features**
+- **Automated Deposits & Withdrawals**: Users deposit assets (WRBTC, RUSDT, or RIF) and receive shares representing their vault stake. Withdrawals burn the shares and return the equivalent value of the deposited asset.
+- **Dynamic Liquidity Rebalancing**: Every 6 hours, the rebalancer triggers the `moveticks` function, allowing the smart contract to automatically adjust liquidity positions for optimal returns and manage impermanent loss.
+- **Automated Rewards Management**: Earned rewards are harvested and reinvested into the vault for compounding growth.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### **Ideal For**
+- **Passive Investors**: No need for active management—RacineFi handles everything automatically.
+- **Cost-Conscious Users**: Zero platform fees, allowing users to keep 100% of their earnings.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## **Setup Instructions**
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+To set up and run the RacineFi project locally, follow these steps:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone the repository:
+   ```bash
+   git clone <repository_url>
+   cd <repository_directory>
+   ```
 
-## Learn More
+2. Install dependencies using **npm** or **yarn**:
+   - For npm:
+     ```bash
+     npm install
+     ```
+   - For yarn:
+     ```bash
+     yarn install
+     ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Start the development server:
+   - For npm:
+     ```bash
+     npm run dev
+     ```
+   - For yarn:
+     ```bash
+     yarn dev
+     ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Access the project in your browser at `http://localhost:3000` (or the appropriate port).
