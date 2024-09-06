@@ -17,8 +17,8 @@
       "/icons/sushiswap.svg"
     ],
     "vault": "clm",
-    "address" : "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    "contractAddress" : "0x9eC3104E33A234040C865F90860d95e9d98711b9"
+    "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0x9eC3104E33A234040C865F90860d95e9d98711b9"
   },
   {
     "id": "2",
@@ -38,8 +38,7 @@
       "/icons/sushiswap.svg"
     ],
     "vault": "clm",
-    "address" : "",
-    "contractAddress" : "0x9eC3104E33A234040C865F90860d95e9d98711b9"
+    "address": "",
+    "contractAddress": "0x9eC3104E33A234040C865F90860d95e9d98711b9"
   }
-
 ]

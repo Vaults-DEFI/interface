@@ -29,7 +29,7 @@ const VaultTable = ({ data }) => {
             vault.address,
             vault.contractAddress
           ); // vault.address represents the vault's address
-          newPositions[vault.address] = Number(vaultPosition).toFixed(3);
+          newPositions[vault.address] = Number(vaultPosition);
         } catch (error) {
           console.error(
             `Error fetching position for vault ${vault.address}:`,
@@ -80,17 +80,15 @@ const VaultTable = ({ data }) => {
       <div>
         <div className="space-x-3 md:space-x-7 xl:space-x-10 my-2">
           <button
-            className={`font-medium text-xl p-2 ${
-              activeTab === "vaults" ? "" : "text-[#6B7280]"
-            }`}
+            className={`font-medium text-xl p-2 ${activeTab === "vaults" ? "" : "text-[#6B7280]"
+              }`}
             onClick={() => handleTabChange("vaults")}
           >
             Vaults
           </button>
           <button
-            className={`font-medium text-xl p-2 ${
-              activeTab === "myVault" ? "" : "text-[#6B7280]"
-            }`}
+            className={`font-medium text-xl p-2 ${activeTab === "myVault" ? "" : "text-[#6B7280]"
+              }`}
             onClick={() => handleTabChange("myVault")}
           >
             My Vault
@@ -265,7 +263,7 @@ const VaultTable = ({ data }) => {
 
                         <td>
                           <div className="whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                            {positions[vault.address] || "Loading..."}
+                            {positions[vault.address] || "-"}
                           </div>
                         </td>
 
