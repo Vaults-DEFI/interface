@@ -58,7 +58,7 @@ const Position = ({ data }) => {
         try {
           const userposition = await position(address, data.contractAddress);
           console.log("Position:", userposition);
-          setUserPosition(Number(userposition).toFixed(3));
+          setUserPosition(Number(userposition));
         } catch (error) {
           console.error("Error fetching position:", error);
         }
@@ -78,8 +78,8 @@ const Position = ({ data }) => {
       console.log("token1...", token1Balance);
       console.log(token2Balance);
 
-      setBalance1(Number(token1Balance).toFixed(3));
-      setBalance2(Number(token2Balance).toFixed(3));
+      setBalance1(Number(token1Balance));
+      setBalance2(Number(token2Balance));
     };
     fetchBalances();
   });
@@ -173,18 +173,16 @@ const Position = ({ data }) => {
 
       <div className="flex items-center justify-between">
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
-            activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
-          }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "deposit" ? "bg-[#2B2E37]" : "text-gray-400"
+            }`}
           onClick={() => setActiveTab("deposit")}
         >
           Deposit
         </button>
 
         <button
-          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${
-            activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
-          }`}
+          className={`bg-[#1E212A] py-3 sm:py-5 w-[49.75%] rounded ${activeTab === "withdraw" ? "bg-[#2B2E37]" : "text-gray-400"
+            }`}
           onClick={() => setActiveTab("withdraw")}
         >
           Withdraw
@@ -199,9 +197,8 @@ const Position = ({ data }) => {
               <span>Balance: {balance1 ? balance1 : "--"}</span>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                amount1 ? "border-orange-500" : ""
-              }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount1 ? "border-orange-500" : ""
+                }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item1}</p>
               <input
@@ -234,9 +231,8 @@ const Position = ({ data }) => {
               <span>Balance: {balance2 ? balance2 : "--"}</span>
             </div>
             <div
-              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                amount2 ? "border-orange-500" : ""
-              }focus-within:border-orange-500`}
+              className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${amount2 ? "border-orange-500" : ""
+                }focus-within:border-orange-500`}
             >
               <p className="mx-2">{data.item2}</p>
               <input
@@ -270,10 +266,9 @@ const Position = ({ data }) => {
                 : null
             }
             className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap my-3
-              ${
-                activeDeposit
-                  ? "bg-orange-700 hover:bg-orange-600"
-                  : "bg-orange-700 cursor-not-allowed opacity-50"
+              ${activeDeposit
+                ? "bg-orange-700 hover:bg-orange-600"
+                : "bg-orange-700 cursor-not-allowed opacity-50"
               }`}
             disabled={!activeDeposit}
           >
@@ -333,9 +328,8 @@ const Position = ({ data }) => {
                 <span>Withdraw Reserved Liquidity</span>
               </div>
               <div
-                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
-                  withdrawAmount ? "border-orange-500" : ""
-                } focus-within:border-orange-500`}
+                className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${withdrawAmount ? "border-orange-500" : ""
+                  } focus-within:border-orange-500`}
               >
                 <p className="mx-2">Shares</p>
                 <input
@@ -365,10 +359,9 @@ const Position = ({ data }) => {
               <button
                 onClick={activeWithdraw ? handleWithdraw : null}
                 className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap my-3
-                  ${
-                    activeWithdraw
-                      ? "bg-orange-700 hover:bg-orange-600"
-                      : "bg-orange-700 cursor-not-allowed opacity-50"
+                  ${activeWithdraw
+                    ? "bg-orange-700 hover:bg-orange-600"
+                    : "bg-orange-700 cursor-not-allowed opacity-50"
                   }`}
                 disabled={!activeWithdraw}
               >
