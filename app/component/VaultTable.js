@@ -18,20 +18,26 @@ const VaultTable = ({ data }) => {
   const [activeTab, setactiveTab] = useState("vaults");
   const [activeButton, setactiveButton] = useState("all");
 
-  const [positions, setPositions] = useState({});  
+  const [positions, setPositions] = useState({});
   useEffect(() => {
     const fetchPositions = async () => {
       const newPositions = {};
       for (let vault of data) {
         try {
           // Fetch position for each vault address
-          const vaultPosition = await position(vault.address, vault.contractAddress);  // vault.address represents the vault's address
+          const vaultPosition = await position(
+            vault.address,
+            vault.contractAddress
+          ); // vault.address represents the vault's address
           newPositions[vault.address] = Number(vaultPosition).toFixed(3);
         } catch (error) {
-          console.error(`Error fetching position for vault ${vault.address}:`, error);
+          console.error(
+            `Error fetching position for vault ${vault.address}:`,
+            error
+          );
         }
       }
-      setPositions(newPositions);  // Update state with the new positions
+      setPositions(newPositions); // Update state with the new positions
     };
 
     if (data.length > 0) {
@@ -192,18 +198,20 @@ const VaultTable = ({ data }) => {
                         assets to start managing and growing your wealth
                         <br />
                         <button
-                          onClick={() => handleFilterChange("clm")}
+                          onClick={() => {
+                            handleTabChange("vaults");
+                            handleFilterChange("clm");
+                          }}
                           className="underline underline-offset-2 font-medium hover:text-gray-400"
                         >
-                          {" "}
                           Go to CLM Vaults
                         </button>
                       </p>
                     ) : (
                       <p className="w-[75%] m-auto text-sm">
-                        It looks like this category is currently empty.
-                        In the meantime, explore our CLM category, where you can
-                        find active vaults!
+                        It looks like this category is currently empty. In the
+                        meantime, explore our CLM category, where you can find
+                        active vaults!
                         <br />
                         <button
                           onClick={() => handleFilterChange("clm")}
@@ -257,7 +265,7 @@ const VaultTable = ({ data }) => {
 
                         <td>
                           <div className="whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                          {positions[vault.address] || "Loading..."}
+                            {positions[vault.address] || "Loading..."}
                           </div>
                         </td>
 
