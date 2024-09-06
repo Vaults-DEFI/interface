@@ -1,11 +1,43 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { getContract } from "../BlockchainService";
+import { ethers } from "ethers";
+
+export async function position(address, contractAddress) {
+  const contract = await getContract(contractAddress);
+  if (!contract || !address) {
+    throw new Error("Contract or address is not available");
+  }
+  const userShares = await contract.balanceOf(address);
+  return ethers.utils.formatUnits(userShares, 18);
+}
 
 const VaultTable = ({ data }) => {
   const [activeTab, setactiveTab] = useState("vaults");
   const [activeButton, setactiveButton] = useState("all");
+
+  const [positions, setPositions] = useState({});  
+  useEffect(() => {
+    const fetchPositions = async () => {
+      const newPositions = {};
+      for (let vault of data) {
+        try {
+          // Fetch position for each vault address
+          const vaultPosition = await position(vault.address, vault.contractAddress);  // vault.address represents the vault's address
+          newPositions[vault.address] = Number(vaultPosition).toFixed(3);
+        } catch (error) {
+          console.error(`Error fetching position for vault ${vault.address}:`, error);
+        }
+      }
+      setPositions(newPositions);  // Update state with the new positions
+    };
+
+    if (data.length > 0) {
+      fetchPositions();
+    }
+  }, [data]);
 
   const handleTabChange = (tab) => {
     setactiveTab(tab);
@@ -225,7 +257,7 @@ const VaultTable = ({ data }) => {
 
                         <td>
                           <div className="whitespace-nowrap w-[130px] pl-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                            {vault.position}
+                          {positions[vault.address] || "Loading..."}
                           </div>
                         </td>
 

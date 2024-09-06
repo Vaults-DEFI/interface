@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
 import ERC20Abi from "./IERC20.json";
 
-const contractAddress = "0x8438Ad1C834623CfF278AB6829a248E37C2D7E3f";
+// const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 export async function connectWallet() {
   if (typeof ethers === "undefined") {
@@ -25,7 +25,7 @@ export async function connectWallet() {
   }
 }
 
-export async function getContract() {
+export async function getContract(contractAddress) {
   const signer = await connectWallet();
   const contract = new ethers.Contract(
     contractAddress,
@@ -36,10 +36,10 @@ export async function getContract() {
   return contract;
 }
 
-export async function parseDeposit(amount0, amount1) {
+export async function parseDeposit(amount0, amount1, contractAddress) {
   try {
     // Get the contract instance
-    const contract = await getContract();
+    const contract = await getContract(contractAddress);
     console.log("Contract address:", contract.address);
 
     // Convert input amounts to BigNumber
@@ -97,10 +97,11 @@ export async function finaldeposit(
   amount1,
   shares,
   item1_address,
-  item2_address
+  item2_address,
+  contractAddress
 ) {
   try {
-    const contract = await getContract(); // Get the contract instance with signer
+    const contract = await getContract(contractAddress); // Get the contract instance with signer
     console.log("item addressss", item1_address);
     console.log("item addressss", item2_address);
 
@@ -161,9 +162,9 @@ export async function finaldeposit(
   }
 }
 
-export async function Withdraw(address, withdrawAmount) {
+export async function Withdraw(address, withdrawAmount, contractAddress) {
   try {
-    const contract = await getContract();
+    const contract = await getContract(contractAddress);
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
       withdrawAmount,

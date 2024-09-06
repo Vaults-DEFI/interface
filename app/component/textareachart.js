@@ -44,7 +44,7 @@ const LiquidityDistributionChart = () => {
         <h3 className="font-semibold mb-2">Current price</h3>
         <p>Price range: (51.68164k) - (51.73334k)</p>
         <p>Utilization(%) : 99.62%</p>
-        <p>RSDT Coin: 1.3017k</p>
+        <p>RUSDT Coin: 1.3017k</p>
       </div>
       <div className="mt-4 flex justify-end space-x-4">
         <div className="flex items-center">

@@ -8,10 +8,11 @@ import {
   getTokenBalance,
   getContract,
 } from "../BlockchainService";
+import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 
-export async function position(address) {
-  const contract = await getContract();
+export async function position(address, contractAddress) {
+  const contract = await getContract(contractAddress);
   if (!contract || !address) {
     throw new Error("Contract or address is not available");
   }
@@ -36,13 +37,28 @@ const Position = ({ data }) => {
 
   const [userPosition, setUserPosition] = useState(null);
 
+  const [error1, setError1] = useState("");
+  const [error2, setError2] = useState("");
+  const [error3, setError3] = useState("");
+
+  const [activeDeposit, setActiveDeposit] = useState(true);
+  const [activeWithdraw, setActiveWithdraw] = useState(true);
+
+  useEffect(() => {
+    if (data.contractAddress) {
+      console.log("contract addresssss....", data.contractAddress);
+    } else {
+      console.log("can't find contract addressss");
+    }
+  });
+
   useEffect(() => {
     const fetchPosition = async () => {
       if (address) {
         try {
-          const userposition = await position(address);
+          const userposition = await position(address, data.contractAddress);
           console.log("Position:", userposition);
-          setUserPosition(userposition);
+          setUserPosition(Number(userposition).toFixed(3));
         } catch (error) {
           console.error("Error fetching position:", error);
         }
@@ -52,7 +68,7 @@ const Position = ({ data }) => {
     };
 
     fetchPosition();
-  }, [address]); // Only re-run when `address` changes
+  }); // Only re-run when `address` changes
 
   useEffect(() => {
     const fetchBalances = async () => {
@@ -62,35 +78,57 @@ const Position = ({ data }) => {
       console.log("token1...", token1Balance);
       console.log(token2Balance);
 
-      setBalance1(token1Balance);
-      setBalance2(token2Balance);
+      setBalance1(Number(token1Balance).toFixed(3));
+      setBalance2(Number(token2Balance).toFixed(3));
     };
     fetchBalances();
-  }, [address, data.item1_Address, data.item2_Address]);
-
-  useEffect(() => {
-    const fetchPosition = async () => {
-      const userposition = await position(address);
-
-      console.log("positionnnnnn", userposition);
-    };
-    fetchPosition();
   });
 
-  const handleMaxitem1 = (balance1) => {
-    setAmount1(balance1);
+  const handleMaxitem1 = (balance) => {
+    if (balance > 0) {
+      setAmount1(balance); // Set max balance to the input field
+      setError1(""); // Clear any previous error
+
+      // Update activeDeposit if there are no errors
+      setActiveDeposit(true);
+    } else {
+      setError1("No available balance");
+      setActiveDeposit(false);
+    }
   };
 
-  const handleMaxitem2 = (balance2) => {
-    setAmount2(balance2);
+  const handleMaxitem2 = (balance) => {
+    if (balance > 0) {
+      setAmount2(balance);
+      setError2("");
+
+      // Update activeDeposit if there are no errors
+      setActiveDeposit(true);
+    } else {
+      setError2("No available balance");
+      setActiveDeposit(false);
+    }
+  };
+
+  const handleMaxWithdraw = (userPosition) => {
+    if (userPosition > 0) {
+      setWithdrawAmount(userPosition);
+      setError3("");
+
+      setActiveWithdraw(true);
+    } else {
+      setError3("No Available Shares");
+      setActiveWithdraw(false);
+    }
   };
 
   const handleDeposit = async (item1_address, item2_address) => {
+    // contract function
     console.log("item addressss", item1_address);
     console.log("item addressss", item2_address);
     try {
       // Call parseDeposit to get the result
-      const result = await parseDeposit(amount1, amount2);
+      const result = await parseDeposit(amount1, amount2, data.contractAddress);
       // Check if result is undefined or null before proceeding
       if (!result) {
         console.error(
@@ -106,7 +144,8 @@ const Position = ({ data }) => {
         amount2,
         result.shares,
         item1_address,
-        item2_address
+        item2_address,
+        data.contractAddress
       );
     } catch (error) {
       console.error("Deposit error:", error);
@@ -115,7 +154,7 @@ const Position = ({ data }) => {
 
   const handleWithdraw = async () => {
     try {
-      await Withdraw(address, withdrawAmount);
+      await Withdraw(address, withdrawAmount, data.contractAddress);
     } catch (error) {
       console.error("withdraw error:", error);
     }
@@ -126,7 +165,9 @@ const Position = ({ data }) => {
       <div className="text-nowrap bg-[#1E212A] flex justify-between items-center rounded-t-xl rounded-b px-5 py-5">
         <span>Your position</span>
         <p className="flex gap-2 items-center text-xs">
-          <span className="sm:text-sm text-gray-400">{userPosition} shares</span>
+          <span className="sm:text-sm text-gray-400">
+            {userPosition ? userPosition : "--"} shares
+          </span>
         </p>
       </div>
 
@@ -155,7 +196,7 @@ const Position = ({ data }) => {
           <div className="flex flex-col">
             <div className="flex justify-end items-center text-sm mb-2">
               {/* <span>Amount</span> */}
-              <span>Balance: {balance1}</span>
+              <span>Balance: {balance1 ? balance1 : "--"}</span>
             </div>
             <div
               className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
@@ -166,7 +207,18 @@ const Position = ({ data }) => {
               <input
                 className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
                 value={amount1}
-                onChange={(e) => setAmount1(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  if (parseFloat(value) > balance1) {
+                    setError1("Amount exceeds available balance");
+                    setActiveDeposit(false);
+                  } else {
+                    setError1("");
+                    setActiveDeposit(true);
+                  }
+                  setAmount1(value);
+                }}
               />
               <button
                 onClick={() => handleMaxitem1(balance1)}
@@ -175,9 +227,11 @@ const Position = ({ data }) => {
                 MAX
               </button>
             </div>
+            {error1 && <p className="text-red-500 mb-5">{error1}</p>}
+
             <div className="flex justify-end items-center text-sm mb-2">
               {/* <span>Amount</span> */}
-              <span>Balance: {balance2}</span>
+              <span>Balance: {balance2 ? balance2 : "--"}</span>
             </div>
             <div
               className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
@@ -188,7 +242,17 @@ const Position = ({ data }) => {
               <input
                 className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
                 value={amount2}
-                onChange={(e) => setAmount2(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (parseFloat(value) > balance2) {
+                    setError2("Amount exceeds available balance");
+                    setActiveDeposit(false);
+                  } else {
+                    setError2("");
+                    setActiveDeposit(true);
+                  }
+                  setAmount2(e.target.value);
+                }}
               />
               <button
                 onClick={() => handleMaxitem2(balance2)}
@@ -197,12 +261,21 @@ const Position = ({ data }) => {
                 MAX
               </button>
             </div>
+            {error2 && <p className="text-red-500 mb-5">{error2}</p>}
           </div>
           <button
-            onClick={() =>
-              handleDeposit(data.item1_Address, data.item2_Address)
+            onClick={
+              activeDeposit
+                ? () => handleDeposit(data.item1_Address, data.item2_Address)
+                : null
             }
-            className="w-full btn-text-white rounded-xl bg-orange-700 hover:bg-orange-600 p-3 transition duration-300 text-nowrap"
+            className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap 
+              ${
+                activeDeposit
+                  ? "bg-orange-700 hover:bg-orange-600"
+                  : "bg-orange-700 cursor-not-allowed opacity-50"
+              }`}
+            disabled={!activeDeposit}
           >
             Deposit
           </button>
@@ -256,9 +329,8 @@ const Position = ({ data }) => {
         <div className="bg-[#1E212A] text-gray-400 rounded-t rounded-b-xl px-5 py-5 mt-[0.4px]">
           {amount > 0 ? (
             <div className="flex flex-col">
-              <div className="flex justify-between items-center text-sm mb-2">
+              <div className="flex justify-start items-center text-sm mb-2">
                 <span>Withdraw Reserved Liquidity</span>
-                <span>Balance: {withdrawAmount}</span>
               </div>
               <div
                 className={`flex bg-[#2B2E37] items-center rounded-xl border-[0.5px] px-2 py-1 my-3 ${
@@ -269,16 +341,36 @@ const Position = ({ data }) => {
                 <input
                   className="bg-transparent p-2 mx-2 focus:border-none focus:outline-none w-[80%] text-white"
                   value={withdrawAmount}
-                  onChange={(e) => setWithdrawAmount(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (parseFloat(value) > userPosition) {
+                      setError3("Amount exceeds available shares");
+                      setActiveWithdraw(false);
+                    } else {
+                      setError3("");
+                      setActiveWithdraw(true);
+                    }
+                    setWithdrawAmount(e.target.value);
+                  }}
                 />
-                <button className="bg-[#3A4050] px-3 py-[6px] rounded-lg">
+                <button
+                  onClick={() => handleMaxWithdraw(userPosition)}
+                  className="bg-[#3A4050] px-3 py-[6px] rounded-lg"
+                >
                   MAX
                 </button>
               </div>
+              {error3 && <p className="text-red-500 mb-5">{error3}</p>}
 
               <button
-                onClick={handleWithdraw}
-                className="w-full btn-text-white rounded-xl bg-orange-700 hover:bg-orange-600 p-3 transition duration-300 text-nowrap"
+                onClick={activeWithdraw ? handleWithdraw : null}
+                className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap 
+                  ${
+                    activeWithdraw
+                      ? "bg-orange-700 hover:bg-orange-600"
+                      : "bg-orange-700 cursor-not-allowed opacity-50"
+                  }`}
+                disabled={!activeWithdraw}
               >
                 Withdraw
               </button>
@@ -291,6 +383,7 @@ const Position = ({ data }) => {
                       color="#111827"
                       width="400px"
                       overlayInnerStyle={{ width: "280px" }}
+                      className="mt-1"
                       title="A withdraw fee is a one-time charge applied at the time of withdrawal."
                     >
                       <AiOutlineInfoCircle />
