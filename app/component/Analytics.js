@@ -61,31 +61,31 @@ const Analytics = ({ data }) => {
             <div className="bg-gray-50 rounded-full w-32 h-32"></div>
           </div> */}
 
-          <div className="w-full md:w-[45%] lg:w-full xl:w-[45%] border border-gray-600 rounded-lg">
-            <table className="w-full border border-transparent border-spacing-2">
+          <div className="w-full md:w-[47%] lg:w-full xl:w-[47%] border border-gray-600 rounded-lg">
+            <table className="w-full border border-transparent border-spacing-2 text-xs">
               <thead>
                 <tr className="text-gray-400 border-b-2 border-gray-600">
                   <th className="text-center p-3 ">ASSET</th>
-                  <th className="text-center p-3 ">TOKEN AMOUNT</th>
+                  <th className="text-center p-3 text-nowrap">TOKEN AMOUNT</th>
                   <th className="text-center p-3 ">VALUE</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td className="text-center px-3 py-2 ">{token1}</td>
-                  <td className="text-center px-3 py-2 ">3.13K</td>
-                  <td className="text-center px-3 py-2 ">$178.30M</td>
+                  <td className="text-center px-3 py-2 ">0.049823K</td>
+                  <td className="text-center px-3 py-2 ">$2.79</td>
                 </tr>
                 <tr>
                   <td className="text-center px-3 py-2 ">{token2}</td>
-                  <td className="text-center px-3 py-2 ">3.13K</td>
-                  <td className="text-center px-3 py-2 ">$3.13K</td>
+                  <td className="text-center px-3 py-2 ">615.03k</td>
+                  <td className="text-center px-3 py-2 ">$615.03</td>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td className="text-center px-3 py-2 ">LP</td>
                   <td className="text-center px-3 py-2 ">0.00</td>
                   <td className="text-center px-3 py-2 ">$256.45K</td>
-                </tr>
+                </tr> */}
               </tbody>
             </table>
           </div>

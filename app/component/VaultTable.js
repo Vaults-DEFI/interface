@@ -430,8 +430,8 @@ const VaultTable = ({ data }) => {
             </tbody>
           </table>
           {showMainnetMessage && (
-            <div className="text-orange-500 font-medium mt-4">
-              WRBTC-rUSDC vault is live now, you can check that!
+            <div className="text-orange-500 text-xs ml-5">
+              This Vault will be available soon!! You can check the live Vault!
             </div>
           )}
         </main>
