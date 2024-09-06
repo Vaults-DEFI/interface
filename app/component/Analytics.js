@@ -1,14 +1,20 @@
 import React from "react";
 import LiquidityDistributionChart from "./textareachart";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { Tooltip } from "antd";
 
-const graphdata = [
-  { name: "WRBTC", value: 78.15 },
-  { name: "rUSDT", value: 21.85 },
-];
 
 const Analytics = ({ data }) => {
+  const token1 = data.item1;
+  const token2 = data.item2;
+  const value1 = 78.15; 
+  const value2 = 21.85; 
+
+  const graphdata = [
+    { name: token1, value: value1 },
+    { name: token2, value: value2 },
+  ];
+
+
   return (
     <div>
       <div className="bg-[#1E212A] rounded-xl py-3 px-4">
@@ -43,12 +49,10 @@ const Analytics = ({ data }) => {
 
             <div>
               <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm mb-2">
-                {" "}
-                WRBTC - 78.15%
+              {`${token1} - ${value1}%`}
               </div>
               <div className="rounded-lg p-3 text-nowrap border border-gray-500 text-sm">
-                {" "}
-                rUSDT - 21.85%
+              {`${token2} - ${value2}%`}
               </div>
             </div>
           </div>
@@ -68,12 +72,12 @@ const Analytics = ({ data }) => {
               </thead>
               <tbody>
                 <tr>
-                  <td className="text-center px-3 py-2 ">WRBTC</td>
+                  <td className="text-center px-3 py-2 ">{token1}</td>
                   <td className="text-center px-3 py-2 ">3.13K</td>
                   <td className="text-center px-3 py-2 ">$178.30M</td>
                 </tr>
                 <tr>
-                  <td className="text-center px-3 py-2 ">rUSDT</td>
+                  <td className="text-center px-3 py-2 ">{token2}</td>
                   <td className="text-center px-3 py-2 ">3.13K</td>
                   <td className="text-center px-3 py-2 ">$3.13K</td>
                 </tr>

@@ -269,7 +269,7 @@ const Position = ({ data }) => {
                 ? () => handleDeposit(data.item1_Address, data.item2_Address)
                 : null
             }
-            className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap 
+            className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap my-3
               ${
                 activeDeposit
                   ? "bg-orange-700 hover:bg-orange-600"
@@ -364,7 +364,7 @@ const Position = ({ data }) => {
 
               <button
                 onClick={activeWithdraw ? handleWithdraw : null}
-                className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap 
+                className={`w-full text-white btn-text-white rounded-xl p-3 transition duration-300 text-nowrap my-3
                   ${
                     activeWithdraw
                       ? "bg-orange-700 hover:bg-orange-600"

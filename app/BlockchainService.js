@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 import contractAbi from "./ABI.json";
 import ERC20Abi from "./IERC20.json";
 
-// const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 export async function connectWallet() {
   if (typeof ethers === "undefined") {

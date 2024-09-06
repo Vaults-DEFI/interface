@@ -1,4 +1,5 @@
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { rootstock } from "viem/chains";
 // import { rootstockTestnet } from "wagmi/chains";
 
 const localhost = {
@@ -25,6 +26,7 @@ export const config = getDefaultConfig({
   appName: "vaults",
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   chains: [
+    rootstock,
     localhost, 
     // rootstockTestnet,
   ],

@@ -6,6 +6,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 
 const generateData = () => {
@@ -35,31 +36,12 @@ const LiquidityDistributionChart = () => {
             contentStyle={{ backgroundColor: "#1e293b", border: "none" }}
             itemStyle={{ color: "white" }}
           />
-          <Bar dataKey="WRBTC" stackId="a" fill="#10B981" />
+          <Legend></Legend>
+          {/* <Bar dataKey="WRBTC" stackId="a" fill="#10B981" /> */}
           <Bar dataKey="rUSDT" stackId="a" fill="#F59E0B" />
           <Bar dataKey="utilized" fill="#6366F1" />
         </BarChart>
       </ResponsiveContainer>
-      <div className="mt-4 bg-gray-800 p-3 rounded">
-        <h3 className="font-semibold mb-2">Current price</h3>
-        <p>Price range: (51.68164k) - (51.73334k)</p>
-        <p>Utilization(%) : 99.62%</p>
-        <p>RUSDT Coin: 1.3017k</p>
-      </div>
-      <div className="mt-4 flex justify-end space-x-4">
-        <div className="flex items-center">
-          <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-          <span>WRBTC</span>
-        </div>
-        <div className="flex items-center">
-          <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-          <span>rUSDT</span>
-        </div>
-        <div className="flex items-center">
-          <div className="w-3 h-3 bg-indigo-500 rounded-full mr-2"></div>
-          <span>Utilized for option</span>
-        </div>
-      </div>
     </div>
   );
 };

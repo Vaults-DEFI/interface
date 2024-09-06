@@ -24,7 +24,8 @@
 
 body {
   color: white;
-  background-color: black;
+  /* background-color: black; */
+  background: rgb(17 20 28);
 }
 
 @layer utilities {
