@@ -68,6 +68,15 @@ For a quick walkthrough of the platform, watch the demo here:
 ## **Integration with Rootstock**
 Our vault and liquidity management contracts are deployed on the Rootstock blockchain, ensuring high security and compatibility with Ethereum tools. This integration allows seamless vault operations, utilizing Rootstock’s low-cost, fast, and reliable infrastructure.
 
+- **Vault Contract Address**: `0x9eC3104E33A234040C865F90860d95e9d98711b9` 
+- **Strategy Contract Address**: `0x1CDd9fe9E02eb4CeE23121c32cC9303dB4D30D46`
+ 
+---
+
+## **Team**
+- **Jay Sojitra**: Full Stack Developer, focusing on the end-to-end development of the RacineFi frontend, ensuring users have an intuitive interface to interact with the vault.
+- **Bhumi Sadariya**: Senior Smart Contract Developer, overseeing the development of the vault’s smart contracts to ensure secure and optimal operation on the blockchain.
+
 ---
 
 ## **Feedback on Building on Rootstock**
