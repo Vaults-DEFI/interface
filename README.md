@@ -70,12 +70,13 @@ Our vault and liquidity management contracts are deployed on the Rootstock block
 
 - **Vault Contract Address**: `0x9eC3104E33A234040C865F90860d95e9d98711b9` 
 - **Strategy Contract Address**: `0x1CDd9fe9E02eb4CeE23121c32cC9303dB4D30D46`
- 
+
 ---
 
 ## **Team**
-- **Jay Sojitra**: Full Stack Developer, focusing on the end-to-end development of the RacineFi frontend, ensuring users have an intuitive interface to interact with the vault.
 - **Bhumi Sadariya**: Senior Smart Contract Developer, overseeing the development of the vault’s smart contracts to ensure secure and optimal operation on the blockchain.
+- **Jay Sojitra**: Full Stack Developer, focusing on the end-to-end development of the RacineFi frontend, ensuring users have an intuitive interface to interact with the vault.
+
 
 ---
 
