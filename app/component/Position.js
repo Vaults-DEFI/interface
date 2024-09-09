@@ -154,7 +154,12 @@ const Position = ({ data }) => {
 
   const handleWithdraw = async () => {
     try {
-      await Withdraw(address, withdrawAmount, data.contractAddress);
+      const formattedWithdrawAmount = ethers.utils.parseUnits(
+        withdrawAmount.toString(), 
+        18 
+      );
+  
+      await Withdraw(address, formattedWithdrawAmount, data.contractAddress);
     } catch (error) {
       console.error("withdraw error:", error);
     }
