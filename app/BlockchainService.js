@@ -24,7 +24,7 @@ export async function connectWallet() {
   }
 }
 
-export async function getContract(contractAddress) {
+export async function getContract() {
   const signer = await connectWallet();
   const contract = new ethers.Contract(
     contractAddress,
@@ -35,10 +35,11 @@ export async function getContract(contractAddress) {
   return contract;
 }
 
-export async function parseDeposit(amount0, amount1, contractAddress) {
+const contractAddress = "0x9eC3104E33A234040C865F90860d95e9d98711b9";
+
+export async function parseDeposit(amount0, amount1) {
   try {
-    // Get the contract instance
-    const contract = await getContract(contractAddress);
+    const contract = await getContract(); // Get the contract instance
     console.log("Contract address:", contract.address);
 
     // Convert input amounts to BigNumber
@@ -49,24 +50,18 @@ export async function parseDeposit(amount0, amount1, contractAddress) {
     console.log("Amount1BN:", amount1BN.toString());
 
     // Encode the function call
-    const data = contract.interface.encodeFunctionData("previewDeposit", [
-      amount0BN,
-      amount1BN,
-    ]);
+    const data = contract.interface.encodeFunctionData("previewDeposit", [amount0BN, amount1BN]);
 
     // Perform the low-level call
     const result = await contract.provider.call({
       to: contract.address,
-      data: data,
+      data: data
     });
 
     console.log("Raw result:", result);
 
     // Decode the result
-    const decodedResult = contract.interface.decodeFunctionResult(
-      "previewDeposit",
-      result
-    );
+    const decodedResult = contract.interface.decodeFunctionResult("previewDeposit", result);
     console.log("Decoded result:", decodedResult);
 
     // Parse the decoded result
@@ -75,7 +70,7 @@ export async function parseDeposit(amount0, amount1, contractAddress) {
       amount0: decodedResult.amount0.toString(),
       amount1: decodedResult.amount1.toString(),
       fee0: decodedResult.fee0.toString(),
-      fee1: decodedResult.fee1.toString(),
+      fee1: decodedResult.fee1.toString()
     };
 
     console.log("Parsed Deposit Result:", parsedResult);
@@ -86,8 +81,7 @@ export async function parseDeposit(amount0, amount1, contractAddress) {
     if (error.error && error.error.message) {
       console.error("Detailed error message:", error.error.message);
     }
-    // Re-throw the error for further handling
-    throw error;
+    throw error; // Re-throw the error for further handling
   }
 }
 
@@ -97,12 +91,10 @@ export async function finaldeposit(
   shares,
   item1_address,
   item2_address,
-  contractAddress
+  // contractAddress
 ) {
   try {
-    const contract = await getContract(contractAddress); // Get the contract instance with signer
-    console.log("item addressss", item1_address);
-    console.log("item addressss", item2_address);
+    const contract = await getContract(); // Get the contract instance with signer
 
     // Convert input amounts to BigNumber
     const amount0BN = ethers.utils.parseUnits(amount0, 18);
@@ -111,43 +103,29 @@ export async function finaldeposit(
     const signer = await connectWallet();
 
     // approve RBTC------
-    let checksumRBTC = ethers.utils.getAddress(
-      item1_address
-    );
-    console.log("Checksum address:", checksumRBTC);
+    let checksumRBTC = ethers.utils.getAddress(item1_address)
+    console.log("Checksum address:", checksumRBTC)
 
-    const RBTCContract = new ethers.Contract(
-      checksumRBTC,
-      ERC20Abi.abi,
-      signer
-    );
-    console.log("...", RBTCContract);
+    const RBTCContract = new ethers.Contract(checksumRBTC, ERC20Abi.abi, signer)
+    console.log("...", RBTCContract)
     const approveRBTC = await RBTCContract.approve(contractAddress, amount0BN);
-    await approveRBTC.wait();
-    console.log("Approved RBTC");
+    await approveRBTC.wait()
+    console.log("Approved RBTC")
 
     // approve rUSDT------
-    let checksumrUSDT = ethers.utils.getAddress(
-      item2_address
-    );
-    console.log("Checksum address:", checksumrUSDT);
+    let checksumrUSDT = ethers.utils.getAddress(item2_address)
+    console.log("Checksum address:", checksumrUSDT)
 
-    const rUSDTContract = new ethers.Contract(
-      checksumrUSDT,
-      ERC20Abi.abi,
-      signer
-    );
-    console.log("...", rUSDTContract);
-    const approverUSDT = await rUSDTContract.approve(
-      contractAddress,
-      amount1BN
-    );
-    await approverUSDT.wait();
-    console.log("Approved rUSDT");
+    const rUSDTContract = new ethers.Contract(checksumrUSDT, ERC20Abi.abi, signer)
+    console.log("...", rUSDTContract)
+    const approverUSDT = await rUSDTContract.approve(contractAddress, amount1BN);
+    await approverUSDT.wait()
+    console.log("Approved rUSDT")
 
     const tx = await contract.deposit(amount0BN, amount1BN, shares);
     await tx.wait();
     console.log("Deposit successful");
+
   } catch (error) {
     console.error("Deposit error:", error);
     if (error.data && error.data.message) {
@@ -158,17 +136,21 @@ export async function finaldeposit(
     if (error.transaction) {
       console.error("Transaction details:", error.transaction);
     }
+
   }
 }
 
-export async function Withdraw(address, withdrawAmount, contractAddress) {
+export async function Withdraw(withdrawAmount) {
   try {
-    const contract = await getContract(contractAddress);
+    const contract = await getContract();
+    console.log("Withdraw amount ..", withdrawAmount - (10 ** 18))
+    // const withdrawAmountFormatted = ethers.utils.parseUnits(String(withdrawAmount), 18);
+    const withdrawAmountFormatted = withdrawAmount * 10 ** 18 - 10 ** 18
+    console.log("formatted from ", withdrawAmountFormatted)
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
-      withdrawAmount,
+      String(withdrawAmountFormatted),
     ]);
-
     const result = await contract.provider.call({
       to: contract.address,
       data: data,
@@ -183,10 +165,10 @@ export async function Withdraw(address, withdrawAmount, contractAddress) {
       amount0: decodedResult.amount0.toString(),
       amount1: decodedResult.amount1.toString(),
     };
-    console.log("Parsed Deposit Result:", parsedResult);
-
+    console.log("Parsed Withdraw Result:", parsedResult);
+    console.log("typ...", typeof withdrawAmountFormatted)
     const tx = await contract.withdraw(
-      withdrawAmount,
+      String(withdrawAmountFormatted),
       parsedResult.amount0,
       parsedResult.amount1
     );

@@ -11,8 +11,8 @@ import {
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 
-export async function position(address, contractAddress) {
-  const contract = await getContract(contractAddress);
+export async function position(address) {
+  const contract = await getContract();
   if (!contract || !address) {
     throw new Error("Contract or address is not available");
   }
@@ -44,19 +44,13 @@ const Position = ({ data }) => {
   const [activeDeposit, setActiveDeposit] = useState(true);
   const [activeWithdraw, setActiveWithdraw] = useState(true);
 
-  useEffect(() => {
-    if (data.contractAddress) {
-      console.log("contract addresssss....", data.contractAddress);
-    } else {
-      console.log("can't find contract addressss");
-    }
-  });
+
 
   useEffect(() => {
     const fetchPosition = async () => {
       if (address) {
         try {
-          const userposition = await position(address, data.contractAddress);
+          const userposition = await position(address);
           console.log("Position:", userposition);
           setUserPosition(Number(userposition));
         } catch (error) {
@@ -123,15 +117,9 @@ const Position = ({ data }) => {
   };
 
   const handleDeposit = async (item1_address, item2_address) => {
-    // contract function
-    console.log("item addressss", item1_address);
-    console.log("item addressss", item2_address);
-    
     try {
-      const formattedAmount1 = ethers.utils.parseUnits(amount1.toString(), 18);
-      const formattedAmount2 = ethers.utils.parseUnits(amount2.toString(), 18); 
-
-      const result = await parseDeposit(formattedAmount1, formattedAmount2, data.contractAddress);
+      // Call parseDeposit to get the result
+      const result = await parseDeposit(amount1, amount2);
       // Check if result is undefined or null before proceeding
       if (!result) {
         console.error(
@@ -140,16 +128,13 @@ const Position = ({ data }) => {
         return;
       }
 
+      // Extract shares from the result
+      console.log("shares", result.shares);
+
       // Call finaldeposit with amount1, amount2, and shares
-      console.log("..................", item1_address);
-      await finaldeposit(
-        formattedAmount1,
-        formattedAmount2,
-        result.shares,
-        item1_address,
-        item2_address,
-        data.contractAddress
-      );
+
+      await finaldeposit(amount1, amount2, result.shares, item1_address, item2_address);
+
     } catch (error) {
       console.error("Deposit error:", error);
     }
@@ -157,12 +142,13 @@ const Position = ({ data }) => {
 
   const handleWithdraw = async () => {
     try {
-      const formattedWithdrawAmount = ethers.utils.parseUnits(
-        withdrawAmount.toString(), 
-        18 
-      );
-  
-      await Withdraw(address, formattedWithdrawAmount, data.contractAddress);
+      // const formattedWithdrawAmount = ethers.utils.parseUnits(
+      //   String(withdrawAmount),
+      //   18
+      // );
+      console.log("withdraw amount----", withdrawAmount)
+      console.log("address---", address)
+      await Withdraw(withdrawAmount);
     } catch (error) {
       console.error("withdraw error:", error);
     }
