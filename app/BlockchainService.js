@@ -145,7 +145,7 @@ export async function Withdraw(withdrawAmount) {
     const contract = await getContract();
     console.log("Withdraw amount ..", withdrawAmount - (10 ** 18))
     // const withdrawAmountFormatted = ethers.utils.parseUnits(String(withdrawAmount), 18);
-    const withdrawAmountFormatted = withdrawAmount * 10 ** 18 - 10 ** 18
+    const withdrawAmountFormatted = withdrawAmount * 10 ** 18 - 1
     console.log("formatted from ", withdrawAmountFormatted)
 
     const data = contract.interface.encodeFunctionData("previewWithdraw", [
