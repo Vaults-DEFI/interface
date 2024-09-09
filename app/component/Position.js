@@ -126,9 +126,12 @@ const Position = ({ data }) => {
     // contract function
     console.log("item addressss", item1_address);
     console.log("item addressss", item2_address);
+    
     try {
-      // Call parseDeposit to get the result
-      const result = await parseDeposit(amount1, amount2, data.contractAddress);
+      const formattedAmount1 = ethers.utils.parseUnits(amount1.toString(), 18);
+      const formattedAmount2 = ethers.utils.parseUnits(amount2.toString(), 18); 
+
+      const result = await parseDeposit(formattedAmount1, formattedAmount2, data.contractAddress);
       // Check if result is undefined or null before proceeding
       if (!result) {
         console.error(
@@ -140,8 +143,8 @@ const Position = ({ data }) => {
       // Call finaldeposit with amount1, amount2, and shares
       console.log("..................", item1_address);
       await finaldeposit(
-        amount1,
-        amount2,
+        formattedAmount1,
+        formattedAmount2,
         result.shares,
         item1_address,
         item2_address,
